@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-.env
-*.egg-info/
-dist/
-build/
-.ipynb_checkpoints/
-ibm_job_ids.json
-simulator_validation.json

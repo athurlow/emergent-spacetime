@@ -1,0 +1,73 @@
+{
+  "backend": "ibm_torino",
+  "processor": "Heron (133 qubits)",
+  "date": "2026-02-20",
+  "shots_per_circuit": 8192,
+  "n_chain": 4,
+  "n_total_qubits": 8,
+  "trotter_steps": 6,
+  "dt": 0.3,
+  "optimization_level": 3,
+  "summary": {
+    "coupling_effect": {
+      "coupled_avg_C": 0.1332,
+      "uncoupled_avg_C": 0.0014,
+      "ratio": 95.74,
+      "signal": "STRONG"
+    },
+    "null_hypothesis": {
+      "two_field_sigma": 0.0279,
+      "single_chain_sigma": 0.0171,
+      "ratio": 1.63,
+      "signal": "MARGINAL"
+    },
+    "spacetime_tearing": {
+      "q0_connected": 0.1538, "q0_torn": 0.0256, "q0_reduction_pct": 83.4,
+      "q1_connected": 0.1618, "q1_torn": 0.0087, "q1_reduction_pct": 94.6,
+      "q2_connected": 0.1265, "q2_torn": 0.0315, "q2_reduction_pct": 75.1,
+      "q3_connected": 0.0905, "q3_torn": 0.0176, "q3_reduction_pct": 80.5,
+      "average_reduction_pct": 83.4,
+      "signal": "STRONG"
+    }
+  },
+  "cross_chain_correlations_z_basis": {
+    "coupled_1.0": {
+      "q0A_q0B": 0.1538,
+      "q1A_q1B": 0.1618,
+      "q2A_q2B": 0.1265,
+      "q3A_q3B": 0.0905,
+      "average": 0.1332,
+      "std_dev": 0.0279
+    },
+    "coupled_0.0": {
+      "q0A_q0B": 0.0026,
+      "q1A_q1B": 0.0017,
+      "q2A_q2B": 0.0009,
+      "q3A_q3B": 0.0003,
+      "average": 0.0014,
+      "std_dev": 0.0009
+    },
+    "single_chain": {
+      "q0A_q0B": 0.0364,
+      "q1A_q1B": 0.0153,
+      "q2A_q2B": 0.0056,
+      "q3A_q3B": 0.0491,
+      "average": 0.0266,
+      "std_dev": 0.0171
+    },
+    "torn": {
+      "q0A_q0B": 0.0256,
+      "q1A_q1B": 0.0087,
+      "q2A_q2B": 0.0315,
+      "q3A_q3B": 0.0176,
+      "average": 0.0209,
+      "std_dev": 0.0086
+    }
+  },
+  "comparison_to_simulator": {
+    "coupling_ratio": {"simulator": "~40x (MI-based)", "hardware": "95.7x (Z-basis)"},
+    "cross_chain_C_coupled": {"simulator": 0.2393, "hardware": 0.1332},
+    "tearing_reduction_pct": {"simulator": 87.2, "hardware": 83.4},
+    "null_hypothesis_ratio": {"simulator": 10.3, "hardware": 1.63}
+  }
+}
