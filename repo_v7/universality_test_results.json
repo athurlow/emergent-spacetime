@@ -1,0 +1,42 @@
+{
+  "backend": "ibm_torino",
+  "date": "2026-02-24",
+  "experiment": "Universality test: Ising vs Heisenberg inter-chain coupling",
+  "architecture": "4+4 chain, 6 Trotter steps, dt=0.3",
+  "ising_sweep": {
+    "coupling_type": "ZZ only",
+    "values": [
+      {"lambda": 0.0, "avg_C": 0.0056},
+      {"lambda": 0.1, "avg_C": 0.0269},
+      {"lambda": 0.25, "avg_C": 0.0579},
+      {"lambda": 0.5, "avg_C": 0.1005},
+      {"lambda": 0.75, "avg_C": 0.1602},
+      {"lambda": 1.0, "avg_C": 0.1523},
+      {"lambda": 1.5, "avg_C": 0.1361},
+      {"lambda": 2.0, "avg_C": 0.1150}
+    ],
+    "coupling_ratio": 27.09,
+    "tearing_pct": 85.7,
+    "peak_lambda": 0.75,
+    "monotonicity": "4/7"
+  },
+  "heisenberg_sweep": {
+    "coupling_type": "ZZ + XX",
+    "values": [
+      {"lambda": 0.0, "avg_C": 0.0097},
+      {"lambda": 0.1, "avg_C": 0.0270},
+      {"lambda": 0.25, "avg_C": 0.0471},
+      {"lambda": 0.5, "avg_C": 0.0829},
+      {"lambda": 0.75, "avg_C": 0.0728},
+      {"lambda": 1.0, "avg_C": 0.0985},
+      {"lambda": 1.5, "avg_C": 0.1177},
+      {"lambda": 2.0, "avg_C": 0.0816}
+    ],
+    "coupling_ratio": 10.10,
+    "tearing_pct": 82.8,
+    "peak_lambda": 1.5,
+    "monotonicity": "5/7"
+  },
+  "curve_correlation": 0.8898,
+  "verdict": "Both Hamiltonians produce emergent geometry with correlated lambda sweep curves, spacetime tearing, and strong coupling ratios"
+}
