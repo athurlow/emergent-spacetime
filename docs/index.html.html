@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergent Spacetime — From Entanglement to Gravity</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500&family=Source+Sans+3:wght@300;400;600;700&display=swap');
+
+:root {
+  --void: #0a0a0f;
+  --deep: #12121a;
+  --surface: #1a1a28;
+  --card: #1e1e30;
+  --border: #2a2a44;
+  --muted: #6a6a8a;
+  --text: #c8c8e0;
+  --bright: #e8e8ff;
+  --teal: #2dd4bf;
+  --teal-dim: #1a8a7a;
+  --teal-glow: rgba(45,212,191,0.15);
+  --coral: #f97066;
+  --coral-glow: rgba(249,112,102,0.15);
+  --gold: #fbbf24;
+  --gold-glow: rgba(251,191,36,0.12);
+  --purple: #a78bfa;
+  --purple-glow: rgba(167,139,250,0.12);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, var(--teal-glow) 0%, transparent 70%);
+  animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity:0.3; transform: translate(-50%,-50%) scale(1); }
+  50% { opacity:0.6; transform: translate(-50%,-50%) scale(1.2); }
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  color: var(--bright);
+  line-height: 1.1;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1rem;
+}
+
+.hero h1 span {
+  background: linear-gradient(135deg, var(--teal), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  color: var(--muted);
+  position: relative;
+  z-index: 1;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.hero .author {
+  font-size: 1.1rem;
+  color: var(--teal);
+  position: relative;
+  z-index: 1;
+  margin-bottom: 3rem;
+}
+
+.scroll-hint {
+  position: relative;
+  z-index: 1;
+  color: var(--muted);
+  font-size: 0.85rem;
+  animation: bob 2s ease-in-out infinite;
+  cursor: pointer;
+}
+
+.scroll-hint::after {
+  content: '↓';
+  display: block;
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+@keyframes bob {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* NAVIGATION */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(10,10,15,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  transform: translateY(-100%);
+  transition: transform 0.4s ease;
+}
+
+.nav.visible { transform: translateY(0); }
+
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.nav a:hover, .nav a.active {
+  color: var(--teal);
+  background: var(--teal-glow);
+}
+
+/* SECTIONS */
+section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  color: var(--bright);
+  margin-bottom: 0.5rem;
+}
+
+section .section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--teal);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+section p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin-bottom: 1.5rem;
+}
+
+/* CARDS */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.8rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: var(--teal);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px var(--teal-glow);
+}
+
+.card .card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+}
+
+.card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: var(--bright);
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* STAT BOXES */
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  flex: 1;
+  min-width: 150px;
+  transition: all 0.3s;
+}
+
+.stat:hover {
+  border-color: var(--teal);
+}
+
+.stat .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.stat .label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.teal .value { color: var(--teal); }
+.coral .value { color: var(--coral); }
+.gold .value { color: var(--gold); }
+.purple .value { color: var(--purple); }
+
+/* TIMELINE */
+.timeline {
+  position: relative;
+  margin: 3rem 0;
+  padding-left: 3rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--teal), var(--purple), var(--coral));
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding-left: 1rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -3.5rem;
+  top: 0.3rem;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 2px solid var(--void);
+  box-shadow: 0 0 12px var(--teal-glow);
+}
+
+.timeline-item h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.3rem;
+}
+
+.timeline-item h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: var(--bright);
+  margin-bottom: 0.5rem;
+}
+
+.timeline-item p {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* DIAGRAM */
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.diagram::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--purple), var(--coral));
+}
+
+.qubit-chain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.qubit {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.qubit.chain-a {
+  background: var(--teal-glow);
+  border: 2px solid var(--teal);
+  color: var(--teal);
+}
+
+.qubit.chain-b {
+  background: var(--coral-glow);
+  border: 2px solid var(--coral);
+  color: var(--coral);
+}
+
+.coupling-line {
+  width: 40px;
+  height: 2px;
+  background: var(--muted);
+  position: relative;
+}
+
+.coupling-line.inter {
+  height: 40px;
+  width: 2px;
+  background: var(--gold);
+  animation: glow-line 2s ease-in-out infinite;
+}
+
+@keyframes glow-line {
+  0%,100% { box-shadow: 0 0 4px var(--gold-glow); opacity:0.5; }
+  50% { box-shadow: 0 0 12px var(--gold); opacity:1; }
+}
+
+.diagram-label {
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0.5rem 0;
+}
+
+/* LAMBDA SWEEP VIZ */
+.sweep-container {
+  margin: 2rem 0;
+}
+
+.sweep-slider {
+  width: 100%;
+  margin: 1rem 0;
+  accent-color: var(--teal);
+  height: 6px;
+}
+
+.sweep-display {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.sweep-bar-group {
+  flex: 1;
+  min-width: 250px;
+}
+
+.sweep-bar {
+  height: 32px;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  transition: width 0.6s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--bright);
+}
+
+.sweep-info {
+  flex: 0 0 200px;
+  text-align: center;
+}
+
+.sweep-info .big-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--teal);
+  line-height: 1;
+}
+
+.sweep-info .big-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+/* METRIC TENSOR VIZ */
+.tensor-viz {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.tensor-3d {
+  width: 200px;
+  height: 200px;
+  position: relative;
+}
+
+.tensor-axis {
+  position: absolute;
+  background: var(--muted);
+  transform-origin: center;
+  transition: all 0.6s ease;
+  border-radius: 2px;
+}
+
+.tensor-axis.x { 
+  top: 50%; left: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+}
+
+.tensor-axis.y {
+  top: 50%; left: 50%;
+  width: 3px;
+  transform: translateX(-50%);
+}
+
+.tensor-axis.z {
+  top: 50%; left: 50%;
+  height: 3px;
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+/* GRAVITY VIZ */
+.gravity-viz {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 2rem;
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.gravity-equation {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  color: var(--bright);
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--deep);
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.gravity-equation .highlight {
+  color: var(--teal);
+}
+
+/* FINDINGS */
+.finding {
+  background: var(--card);
+  border-left: 3px solid var(--teal);
+  padding: 1.5rem 1.5rem 1.5rem 2rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+  transition: all 0.3s;
+}
+
+.finding:hover {
+  border-left-color: var(--gold);
+  background: var(--surface);
+}
+
+.finding .finding-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--teal);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.finding h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--bright);
+  margin: 0.3rem 0;
+}
+
+.finding p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* INTERACTIVE TABS */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 0.6rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.tab:hover { border-color: var(--teal); color: var(--text); }
+.tab.active { background: var(--teal-glow); border-color: var(--teal); color: var(--teal); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 4rem 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.footer a {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+/* SEPARATOR */
+.sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 2rem 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  section { padding: 4rem 1.5rem; }
+  .stat-row { gap: 1rem; }
+  .stat { min-width: 120px; }
+  .sweep-display { flex-direction: column; }
+  .tensor-viz { gap: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#question">Question</a>
+  <a href="#setup">Setup</a>
+  <a href="#experiments">Experiments</a>
+  <a href="#sweep">Lambda Sweep</a>
+  <a href="#tensor">Metric Tensor</a>
+  <a href="#gravity">Gravity</a>
+  <a href="#findings">Findings</a>
+  <a href="#next">What's Next</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="subtitle">Measured on IBM Quantum Hardware · February 2026</div>
+  <h1>Emergent <span>Spacetime</span><br>from Entanglement</h1>
+  <div class="author">Andrew Thurlow · 528 Labs</div>
+  <div class="scroll-hint" onclick="document.getElementById('question').scrollIntoView()">
+    Scroll to explore
+  </div>
+</div>
+
+<!-- THE QUESTION -->
+<section id="question">
+  <div class="section-num">01 — The Question</div>
+  <h2>Is spacetime made of entanglement?</h2>
+  <p>In 2010, physicist Mark Van Raamsdonk proposed a radical idea: spacetime isn't fundamental. It emerges from quantum entanglement between fields. Remove the entanglement, and spacetime tears apart.</p>
+  <p>This idea remained purely theoretical for 15 years. No one had tested it on real quantum hardware. We built a framework to do exactly that.</p>
+  
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🔗</div>
+      <h3>Entanglement</h3>
+      <p>Quantum correlations between particles that persist regardless of distance. Einstein called it "spooky action at a distance."</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌌</div>
+      <h3>Spacetime</h3>
+      <p>The fabric of the universe — the stage on which all physics plays out. General relativity describes its curvature.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">❓</div>
+      <h3>The Connection</h3>
+      <p>If entanglement creates spacetime, then quantum computers — which create entanglement on demand — can create tiny spacetimes in the lab.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE SETUP -->
+<section id="setup">
+  <div class="section-num">02 — The Setup</div>
+  <h2>Two chains of qubits. One universe.</h2>
+  <p>We use two coupled chains of 4 qubits each — a minimal model of two entangled quantum fields. The coupling strength λ controls how much entanglement exists between them.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Chain A — Field φ₁</div>
+    <div class="qubit-chain">
+      <div class="qubit chain-a">q0</div>
+      <div class="coupling-line"></div>
+      <div class="qubit chain-a">q1</div>
+      <div class="coupling-line"></div>
+      <div class="qubit chain-a">q2</div>
+      <div class="coupling-line"></div>
+      <div class="qubit chain-a">q3</div>
+    </div>
+    <div class="qubit-chain" style="gap:3.2rem;">
+      <div class="coupling-line inter"></div>
+      <div class="coupling-line inter"></div>
+      <div class="coupling-line inter"></div>
+      <div class="coupling-line inter"></div>
+    </div>
+    <div class="qubit-chain">
+      <div class="qubit chain-b">q4</div>
+      <div class="coupling-line"></div>
+      <div class="qubit chain-b">q5</div>
+      <div class="coupling-line"></div>
+      <div class="qubit chain-b">q6</div>
+      <div class="coupling-line"></div>
+      <div class="qubit chain-b">q7</div>
+    </div>
+    <div class="diagram-label">Chain B — Field φ₂</div>
+    <div class="sep"></div>
+    <div class="diagram-label" style="color:var(--gold);">
+      ↕ Gold lines = inter-chain coupling (strength λ) — this is what creates spacetime
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat teal"><div class="value">8</div><div class="label">Qubits</div></div>
+    <div class="stat coral"><div class="value">133</div><div class="label">Available on Torino</div></div>
+    <div class="stat gold"><div class="value">6</div><div class="label">Trotter Steps</div></div>
+    <div class="stat purple"><div class="value">8,192</div><div class="label">Shots per Circuit</div></div>
+  </div>
+
+  <p>The experiment runs on <strong>IBM Torino</strong> (133-qubit Heron r1) and <strong>IBM Fez</strong> (156-qubit Heron r2) — real quantum processors accessible through the cloud.</p>
+</section>
+
+<!-- THE EXPERIMENTS -->
+<section id="experiments">
+  <div class="section-num">03 — The Experiments</div>
+  <h2>Eight experiments. One framework.</h2>
+  <p>Over five days, we ran eight hardware experiments scaling from 8 to 128 qubits, testing different Hamiltonians, measurement bases, and architectures.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <h4>Experiment 1</h4>
+      <h3>The Lambda Sweep</h3>
+      <p>Vary coupling strength from 0 to 2.0. Watch cross-chain correlations grow. Coupling ratio: 27.9× above baseline. Spacetime forms as entanglement increases.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Experiment 2</h4>
+      <h3>The Null Hypothesis</h3>
+      <p>Run a single chain without a partner. Result: 10-20× less geometric signal. Geometry requires TWO coupled fields — it's relational, not intrinsic.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Experiment 3</h4>
+      <h3>Universality Test</h3>
+      <p>Ising (ZZ) vs Heisenberg (ZZ+XX) coupling. Both produce the same geometry curve: r = 0.89 correlation. Different physics, same spacetime.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Experiment 4</h4>
+      <h3>16-Qubit Scale</h3>
+      <p>Double the system size to 8+8. Geometry persists and strengthens. The framework scales.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Experiment 5</h4>
+      <h3>128-Qubit Full Chip</h3>
+      <p>Use 128 of 133 qubits on IBM Torino. 16 independent experiments running simultaneously. Geometry emerges across the entire processor.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Experiment 6</h4>
+      <h3>Multi-Basis Discovery</h3>
+      <p>Measure in Z, X, and Y bases. Each basis reveals a different geometric component. The Hamiltonian symmetry determines which direction is strongest.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Experiment 7</h4>
+      <h3>Metric Tensor Extraction</h3>
+      <p>Combine three bases into a diagonal metric tensor. Positive definite everywhere. 100% triangle inequality satisfaction. This IS a metric.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>Experiment 8</h4>
+      <h3>Gravitational Analysis</h3>
+      <p>Apply Jacobson's derivation: G_eff = 1/(4λC). Direction-dependent gravity. Universal total gravitational coupling: r = 0.9987. Singularity at λ=0.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LAMBDA SWEEP INTERACTIVE -->
+<section id="sweep">
+  <div class="section-num">04 — The Lambda Sweep</div>
+  <h2>Turn up the coupling. Watch spacetime form.</h2>
+  <p>Drag the slider to change the coupling strength λ. The bars show the cross-chain correlation — the geometric signal — measured on IBM Torino hardware.</p>
+
+  <div class="sweep-container">
+    <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);">
+      <span>λ = 0 (no coupling)</span>
+      <span>λ = 2.0 (strong coupling)</span>
+    </div>
+    <input type="range" class="sweep-slider" id="lambdaSlider" min="0" max="7" value="5" step="1">
+    
+    <div class="sweep-display">
+      <div class="sweep-bar-group">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem;">
+          λ = <span id="lambdaVal" style="color:var(--teal);">1.0</span>
+        </div>
+        <div class="sweep-bar" id="barZ" style="width:80%;background:linear-gradient(90deg,var(--teal),var(--teal-dim));">
+          C_ZZ: <span id="valZ">0.1714</span>
+        </div>
+        <div class="sweep-bar" id="barX" style="width:10%;background:linear-gradient(90deg,var(--coral),#c24a2e);">
+          C_XX: <span id="valX">0.0169</span>
+        </div>
+        <div class="sweep-bar" id="barY" style="width:10%;background:linear-gradient(90deg,var(--gold),#c29a0e);">
+          C_YY: <span id="valY">0.0198</span>
+        </div>
+      </div>
+      <div class="sweep-info">
+        <div class="big-num" id="ratioNum">27.9×</div>
+        <div class="big-label">coupling ratio</div>
+        <div style="margin-top:1rem;font-size:0.85rem;color:var(--muted);" id="sweepNote">
+          Peak geometry. Spacetime fully formed.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METRIC TENSOR -->
+<section id="tensor">
+  <div class="section-num">05 — The Metric Tensor</div>
+  <h2>Spacetime has shape. We measured it.</h2>
+  <p>By measuring in three bases (Z, X, Y), we extract a diagonal metric tensor — the mathematical object that describes the geometry of spacetime. Each component tells you how "deep" spacetime is in that direction.</p>
+
+  <div class="tabs" id="tensorTabs">
+    <div class="tab active" onclick="showTensor('ising')">Ising Coupling</div>
+    <div class="tab" onclick="showTensor('xy')">XY Coupling</div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card" id="tensorCard" style="grid-column: 1 / -1;">
+      <div style="display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:2rem;">
+        <div style="text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">Z-COMPONENT</div>
+          <div id="tensorZ" style="font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;color:var(--teal);">0.1714</div>
+          <div style="font-size:0.8rem;color:var(--muted);" id="tensorZLabel">dominant — coupling direction</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">X-COMPONENT</div>
+          <div id="tensorX" style="font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;color:var(--coral);">0.0169</div>
+          <div style="font-size:0.8rem;color:var(--muted);" id="tensorXLabel">weak — perpendicular</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">Y-COMPONENT</div>
+          <div id="tensorY" style="font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;color:var(--gold);">0.0198</div>
+          <div style="font-size:0.8rem;color:var(--muted);" id="tensorYLabel">weak — perpendicular</div>
+        </div>
+      </div>
+      <div class="sep"></div>
+      <div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:1rem;margin-top:1rem;">
+        <div style="text-align:center;">
+          <div style="font-size:0.75rem;color:var(--muted);">ANISOTROPY</div>
+          <div id="tensorAniso" style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--purple);">10.1×</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:0.75rem;color:var(--muted);">FLATNESS</div>
+          <div id="tensorFlat" style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--purple);">0.099</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:0.75rem;color:var(--muted);">SHAPE</div>
+          <div id="tensorShape" style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--purple);">Needle →</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:0.75rem;color:var(--muted);">POSITIVE DEFINITE</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--teal);">✓ YES</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <p style="margin-top:1rem;">The Ising Hamiltonian couples in Z, so the Z-component is 10× larger — spacetime is elongated along the coupling direction like a needle. The XY Hamiltonian couples in X and Y, producing a disk-shaped geometry instead. <strong>The Hamiltonian determines the shape. The coupling determines the size.</strong></p>
+</section>
+
+<!-- GRAVITY -->
+<section id="gravity">
+  <div class="section-num">06 — Emergent Gravity</div>
+  <h2>Where geometry is weak, gravity is strong.</h2>
+  <p>Applying Jacobson's thermodynamic derivation to each tensor component gives direction-dependent gravitational constants. The result: gravity is strongest where spacetime is thinnest.</p>
+
+  <div class="gravity-viz">
+    <div style="font-size:1rem;color:var(--muted);margin-bottom:1rem;">THE EQUATION</div>
+    <div class="gravity-equation">
+      G<sub>eff</sub> = 1 / (4 <span class="highlight">λ</span> · <span class="highlight">C</span>)
+    </div>
+    <div style="font-size:0.9rem;color:var(--muted);margin-top:0.5rem;">
+      Strong entanglement (C↑) → Strong geometry → Weak gravity (G↓)<br>
+      Zero entanglement (C=0) → No geometry → Infinite gravity (G=∞) → <strong style="color:var(--coral);">Singularity</strong>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat teal">
+      <div class="value">1.46</div>
+      <div class="label">G_Z (Ising) — Weak gravity</div>
+    </div>
+    <div class="stat coral">
+      <div class="value">14.79</div>
+      <div class="label">G_X (Ising) — Strong gravity</div>
+    </div>
+    <div class="stat gold">
+      <div class="value">∞</div>
+      <div class="label">G at λ=0 — Singularity</div>
+    </div>
+  </div>
+
+  <div class="diagram" style="text-align:center;margin-top:2rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);margin-bottom:1rem;">
+      TOTAL GRAVITATIONAL CONSTANT — UNIVERSALITY CHECK
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:4rem;font-weight:700;color:var(--teal);">
+      r = 0.9987
+    </div>
+    <div style="font-size:1.1rem;color:var(--bright);margin:1rem 0;">
+      Ising and XY produce the same total gravity
+    </div>
+    <div style="font-size:0.9rem;color:var(--muted);max-width:500px;margin:0 auto;">
+      Different Hamiltonians. Different tensor shapes. Different directional gravity. But the <em>total</em> gravitational coupling is virtually identical. This is the equivalence principle emerging from entanglement data.
+    </div>
+  </div>
+</section>
+
+<!-- FINDINGS -->
+<section id="findings">
+  <div class="section-num">07 — Key Findings</div>
+  <h2>Twelve results. All from hardware.</h2>
+
+  <div class="finding">
+    <div class="finding-num">Finding 01</div>
+    <h4>Geometry scales with coupling</h4>
+    <p>Cross-field correlations increase smoothly with λ. Coupling ratio: 27.9× (Ising Z-basis).</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 02</div>
+    <h4>Spacetime tears upon decoupling</h4>
+    <p>62–92% correlation collapse at λ=0, consistent with Van Raamsdonk's prediction.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 03</div>
+    <h4>Two fields required</h4>
+    <p>Single-chain control shows 10-20× less signal. Geometry is relational, not intrinsic.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 04</div>
+    <h4>Universal across Hamiltonians</h4>
+    <p>Ising and Heisenberg produce the same geometry curve (r = 0.89). Different matter, same spacetime.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 05</div>
+    <h4>Scales from 8 to 128 qubits</h4>
+    <p>Framework reproduces at 8, 16, and 128 qubits. Geometry persists at all scales tested.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 06</div>
+    <h4>Geometry has tensor structure</h4>
+    <p>Multi-basis measurement reveals basis-dependent components. Z-coupling produces Z-dominant geometry.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 07</div>
+    <h4>Positive definite metric</h4>
+    <p>All diagonal components positive at every λ. The emergent structure satisfies the mathematical definition of a metric.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 08</div>
+    <h4>100% triangle inequality satisfaction</h4>
+    <p>56 out of 56 triangles satisfy the inequality for both Hamiltonians. Distances are consistent.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 09</div>
+    <h4>Geometric phase transition</h4>
+    <p>Ricci scalar analog shows inflection at λ≈0.31 — accelerating to decelerating geometry, analogous to inflation.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 10</div>
+    <h4>Eigenvalue evolution</h4>
+    <p>Flatness drops from 0.84 (sphere) to 0.07 (needle). The Hamiltonian sculpts the shape of spacetime.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 11</div>
+    <h4>Direction-dependent gravity</h4>
+    <p>G_eff varies by 10× across directions. Gravity pulls perpendicular to the strongest geometry.</p>
+  </div>
+  <div class="finding">
+    <div class="finding-num">Finding 12</div>
+    <h4>Universal gravitational coupling</h4>
+    <p>Total G_trace correlates at r = 0.9987 across Hamiltonians. The equivalence principle from entanglement.</p>
+  </div>
+</section>
+
+<!-- WHAT'S NEXT -->
+<section id="next">
+  <div class="section-num">08 — What's Next</div>
+  <h2>From toy model to quantum gravity.</h2>
+  <p>This framework is at the trailhead of quantum gravity. The results are consistent with theoretical predictions, but the journey from 8 qubits to a complete theory of quantum gravity is vast.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">⚛️</div>
+      <h3>Cross-Platform Validation</h3>
+      <p>Run the same experiments on IonQ trapped ion hardware via Amazon Braket. If geometry reproduces on atoms instead of wires, it's a property of quantum mechanics itself.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💥</div>
+      <h3>Big Bang Experiment</h3>
+      <p>Ramp coupling from zero across Trotter steps. Watch spacetime emerge from nothing. Measure the curvature history of a toy universe from birth to maturity.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🕳️</div>
+      <h3>Black Hole Analog</h3>
+      <p>Create a spatial gradient in coupling — strong center, weak edges. Look for a horizon where geometry changes character.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌊</div>
+      <h3>Gravitational Waves</h3>
+      <p>Oscillate coupling sinusoidally. If the oscillation propagates along the chain with delay, that's a propagating disturbance in emergent geometry.</p>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:3rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem;">Open Source</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--bright);">
+      All code, data, and figures are public.
+    </div>
+    <div style="margin-top:1rem;">
+      <a href="https://github.com/athurlow/emergent-spacetime" target="_blank" style="display:inline-block;padding:0.8rem 2rem;background:var(--teal);color:var(--void);border-radius:8px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:0.85rem;font-weight:700;letter-spacing:1px;transition:all 0.3s;">
+        VIEW ON GITHUB →
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  Andrew Thurlow · 528 Labs · February 2026<br>
+  <a href="https://github.com/athurlow/emergent-spacetime">github.com/athurlow/emergent-spacetime</a><br>
+  <span style="font-size:0.8rem;margin-top:0.5rem;display:inline-block;">
+    IBM Torino · IBM Fez · 8 Experiments · 14 Figures · 12 Findings
+  </span>
+</div>
+
+<script>
+// === NAV VISIBILITY ===
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('visible', window.scrollY > window.innerHeight * 0.5);
+});
+
+// === SECTION REVEAL ===
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('section').forEach(s => observer.observe(s));
+
+// === LAMBDA SWEEP INTERACTIVE ===
+const lambdas = [0.0, 0.1, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0];
+const isingZ = [0.0061, 0.0126, 0.0371, 0.0960, 0.1426, 0.1714, 0.1394, 0.1117];
+const isingX = [0.0079, 0.0095, 0.0080, 0.0145, 0.0240, 0.0169, 0.0207, 0.0097];
+const isingY = [0.0077, 0.0129, 0.0273, 0.0253, 0.0207, 0.0198, 0.0102, 0.0182];
+
+const notes = [
+  "No coupling. No entanglement. No geometry. Singularity.",
+  "Faint geometry emerging from the noise floor.",
+  "Geometry clearly visible. Spacetime is forming.",
+  "Strong geometry. Z-component dominates.",
+  "Near-peak geometry. Tensor highly anisotropic.",
+  "Peak geometry. Spacetime fully formed.",
+  "Past the peak. Trotter error accumulating.",
+  "Geometry persists but weakening at extreme coupling."
+];
+
+const slider = document.getElementById('lambdaSlider');
+slider.addEventListener('input', updateSweep);
+
+function updateSweep() {
+  const i = parseInt(slider.value);
+  const maxVal = Math.max(...isingZ);
+  
+  document.getElementById('lambdaVal').textContent = lambdas[i];
+  document.getElementById('valZ').textContent = isingZ[i].toFixed(4);
+  document.getElementById('valX').textContent = isingX[i].toFixed(4);
+  document.getElementById('valY').textContent = isingY[i].toFixed(4);
+  
+  document.getElementById('barZ').style.width = Math.max(5, (isingZ[i]/maxVal)*100) + '%';
+  document.getElementById('barX').style.width = Math.max(5, (isingX[i]/maxVal)*100) + '%';
+  document.getElementById('barY').style.width = Math.max(5, (isingY[i]/maxVal)*100) + '%';
+  
+  const ratio = isingZ[i] / isingZ[0];
+  document.getElementById('ratioNum').textContent = ratio.toFixed(1) + '×';
+  document.getElementById('sweepNote').textContent = notes[i];
+}
+
+// === TENSOR TABS ===
+function showTensor(type) {
+  document.querySelectorAll('#tensorTabs .tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  if (type === 'ising') {
+    document.getElementById('tensorZ').textContent = '0.1714';
+    document.getElementById('tensorX').textContent = '0.0169';
+    document.getElementById('tensorY').textContent = '0.0198';
+    document.getElementById('tensorZLabel').textContent = 'dominant — coupling direction';
+    document.getElementById('tensorXLabel').textContent = 'weak — perpendicular';
+    document.getElementById('tensorYLabel').textContent = 'weak — perpendicular';
+    document.getElementById('tensorAniso').textContent = '10.1×';
+    document.getElementById('tensorFlat').textContent = '0.099';
+    document.getElementById('tensorShape').textContent = 'Needle →';
+    document.getElementById('tensorZ').style.color = 'var(--teal)';
+    document.getElementById('tensorX').style.color = 'var(--coral)';
+  } else {
+    document.getElementById('tensorZ').textContent = '0.0362';
+    document.getElementById('tensorX').textContent = '0.0664';
+    document.getElementById('tensorY').textContent = '0.0450';
+    document.getElementById('tensorZLabel').textContent = 'weak — perpendicular';
+    document.getElementById('tensorXLabel').textContent = 'dominant — coupling direction';
+    document.getElementById('tensorYLabel').textContent = 'moderate';
+    document.getElementById('tensorAniso').textContent = '1.8×';
+    document.getElementById('tensorFlat').textContent = '0.545';
+    document.getElementById('tensorShape').textContent = 'Disk ⬬';
+    document.getElementById('tensorZ').style.color = 'var(--coral)';
+    document.getElementById('tensorX').style.color = 'var(--teal)';
+  }
+}
+
+// Init
+updateSweep();
+</script>
+
+</body>
+</html>
