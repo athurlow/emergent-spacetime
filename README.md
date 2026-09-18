@@ -179,7 +179,7 @@ https://github.com/athurlow/emergent-spacetime
 Andrew Thurlow  
 528 Labs  
 andythurlow15@gmail.com  
-[GitHub](https://github.com/athurlow) | [LinkedIn](https://linkedin.com/in/andrew-thurlow)
+[GitHub](https://github.com/athurlow) | [LinkedIn](https://www.linkedin.com/in/andrew-thurlow-b2337b148/)
 
 Feedback, criticism, and collaboration inquiries welcome.
 
