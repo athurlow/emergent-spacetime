@@ -10,7 +10,9 @@ Andrew Thurlow | [528 Labs](https://528labs.org) | February 2026
 
 This repository contains a computational framework for studying emergent spacetime geometry from quantum entanglement. The core idea: two coupled qubit chains act as a discrete analog of two pre-geometric scalar fields. When the fields are entangled, geometric structure emerges in the correlation pattern. When entanglement is removed, the geometry vanishes.
 
-The framework is validated across **8 hardware experiments** on IBM quantum processors (Torino and Fez), spanning 8 to 128 qubits, three Hamiltonians, three measurement bases, and multiple topologies.
+The framework was run across **8 hardware experiments** on IBM quantum processors (Torino and Fez), spanning 8 to 128 qubits, three Hamiltonians, three measurement bases, and multiple topologies.
+
+Several headline claims from earlier versions have since been withdrawn after re-analysis, and are marked inline below. What survives is a cross-field correlation signal that is reproducible and well clear of the noise floor. The geometric interpretation built on top of it is not yet supported by the data.
 
 ## Key Results
 
@@ -20,12 +22,16 @@ The framework is validated across **8 hardware experiments** on IBM quantum proc
 
 **2. Removing coupling destroys geometry.** "Spacetime tearing" — 62–92% correlation collapse upon decoupling — confirmed across all experiments, consistent with Van Raamsdonk's disconnection prediction.
 
-**3. Universality across Hamiltonians.** Ising (ZZ) and Heisenberg (ZZ+XX) inter-chain couplings produce the same emergent geometry curve (Pearson r = 0.89), establishing that the geometric signal is a property of coupled fields, not a specific interaction.
+**3. Both Hamiltonians produce a signal, but not the same curve.** Ising (ZZ) and Heisenberg (ZZ+XX) inter-chain couplings both generate cross-field correlations well above shot noise. They are **not** the same curve: they peak at different couplings (λ = 0.75 vs λ = 1.5) and fail a scaling-collapse test at χ²/dof = 9.0, with the worst point 4.1σ off.
+
+> Earlier versions reported "the same emergent geometry curve (Pearson r = 0.89)". That r has been withdrawn as evidence. Both sweeps rise from zero, peak and fall, and any two curves of that shape correlate strongly whatever physics produced them: unrelated unimodal curves with a randomly placed peak reach r = 0.89 about 16% of the time. The replacement test asks whether the curves collapse onto a common shape once a non-universal amplitude and coupling scale are allowed. It accepts 84% of genuinely universal pairs, and rejects this one. See `src/analysis/12_universality_and_gravity_validation.py`.
 
 **4. Geometry has tensor structure.** Multi-basis measurement reveals that emergent geometry has directional structure inherited from the Hamiltonian symmetry:
-- Ising (ZZ) coupling → geometry visible in Z-basis (27.9×), invisible in X-basis (2.15×)
-- XY (XX+YY) coupling → geometry visible in X-basis (9.93×), invisible in Z-basis (5.66×)
+- Ising (ZZ) coupling → peak |C| = 0.171 in the Z-basis, 0.024 in the X-basis
+- XY (XX+YY) coupling → peak |C| = 0.088 in the X-basis, 0.036 in the Z-basis
 - Magnitude from coupling strength. Shape from Hamiltonian symmetry.
+
+> Figures here were previously quoted as ratios against the decoupled baseline (27.9×, 2.15×, 9.93×, 5.66×). They are restated as measured correlations for the reason given under result 1. The basis contrast itself is unaffected, since it compares two measured numbers rather than dividing by a noise floor. The shot-noise scale is 0.011, so the X-basis Ising value of 0.024 is close to it and should not be read as a confident non-zero.
 
 **5. The emergent distance is a semi-metric, not a metric.** Testing the correlation tensor against the metric axioms:
 - Positive definiteness holds, but trivially: the tensor is a diagonal of absolute correlation values, so this cannot fail and is not evidence.
@@ -34,6 +40,8 @@ The framework is validated across **8 hardware experiments** on IBM quantum proc
 - Ricci scalar analog and eigenvalue spectrum are unchanged from earlier versions and have **not** yet been re-examined. The λ ≈ 0.31 figure in particular is a second derivative of an 8-point sweep and should be treated as provisional.
 
 > Earlier versions reported "triangle inequality (100% satisfaction)". That test compared scalars on a line using |xᵢ − xⱼ|, which satisfies the triangle inequality as an identity, so it returned 100% for any input including random noise. It has been replaced with a site-to-site test over a real 8×8 distance matrix, shipped with a negative control demonstrating that the new test can fail.
+
+**6. The universal gravitational coupling is withdrawn.** The effective constant G = 1/(4λη) was reported as agreeing between Ising and XY couplings at r = 0.9987. That correlation is definitional: both series carry the same imposed 1/λ factor, and replacing both measured inputs with constants, which measures nothing at all, scores r = 1.0000 on the same test. Correlating only the measured input gives r = 0.63 (95% CI 0.43 to 0.77), which unrelated curves match 47% of the time, with a scaling collapse failing at χ²/dof = 16.5.
 
 ## Hardware Experiments
 
@@ -146,6 +154,7 @@ This produces the full lambda sweep, tearing experiment, null hypothesis compari
 ```bash
 pip install qiskit qiskit-aer numpy pytest
 python src/analysis/11_baseline_and_metric_validation.py
+python src/analysis/12_universality_and_gravity_validation.py
 python -m pytest tests/ -q
 ```
 
@@ -154,8 +163,10 @@ python -m pytest tests/ -q
 | `src/analysis/correlation_stats.py` | Bootstrap confidence intervals on connected correlators; reports the coupled-minus-baseline difference instead of a ratio against a noise floor |
 | `src/analysis/metric_axioms.py` | Metric-axiom tests over a real site-to-site distance matrix, with a negative control proving the triangle test can fail |
 | `src/analysis/two_chain_model.py` | Circuit, exact correlations and sampled counts, so tests run on real data rather than pasted numbers |
-| `src/analysis/11_baseline_and_metric_validation.py` | Runs both corrected analyses end to end |
-| `tests/test_corrected_analysis.py` | 18 tests, including two that document the defects being fixed |
+| `src/analysis/curve_comparison.py` | Correlation with intervals, a calibrated null for rise-then-fall curves, partial correlation, leverage, and a scaling-collapse test for universality |
+| `src/analysis/11_baseline_and_metric_validation.py` | Runs the baseline and metric-axiom analyses end to end |
+| `src/analysis/12_universality_and_gravity_validation.py` | Runs the universality and emergent-gravity analyses end to end |
+| `tests/` | 32 tests, including several that document the defects being fixed |
 
 ### Known outstanding issues
 
@@ -164,7 +175,7 @@ python -m pytest tests/ -q
 - No error mitigation is applied on any hardware run.
 - The hardware pipeline measures single-basis ZZ correlators only. These cannot distinguish entanglement from classical correlation, so claims about entanglement specifically are not yet supported by the hardware data. The tomography circuits built in experiment 3 are submitted but never analysed.
 - The tearing experiment removes the entangling gate, so the correlation collapse is guaranteed by construction rather than being an independent prediction under test.
-- Results 3 (universality, r = 0.89) and the emergent-gravity correlation (r = 0.9987) have not been re-examined. The latter correlates two series that both carry the 1/λ factor imposed by G = 1/(4λη), so the agreement is partly definitional.
+- The Ricci scalar analog and the eigenvalue-spectrum results have not been re-examined. The λ ≈ 0.31 inflection is a second derivative of an 8-point sweep and is unlikely to survive an uncertainty analysis.
 
 ## Theoretical Framework
 
@@ -181,11 +192,15 @@ The two-chain architecture provides a minimal testbed: chain A and chain B repre
 ### Lambda Sweep — The Coupling-Geometry Relationship
 The cross-field correlation |C| scales smoothly with λ across 8 values (0.0 to 2.0). The curve is monotonic in the rising phase, peaks between λ = 0.5 and 1.5 depending on the Hamiltonian, and turns over at strong coupling. This shape reproduces at 8, 16, and 128 qubits — the first experimental measurement of the coupling-geometry relationship on quantum hardware.
 
-### Universality — Same Geometry, Different Hamiltonians
-Ising (ZZ-only) and Heisenberg (ZZ+XX) inter-chain couplings produce lambda sweep curves with Pearson correlation r = 0.89. The simpler Ising Hamiltonian produces the stronger signal (27.1× vs 10.1×), with the peak shifting from λ = 0.75 (Ising) to λ = 1.5 (Heisenberg). Different microscopic physics, same emergent geometry.
+### Universality — Different Hamiltonians, Different Curves
+Ising (ZZ-only) and Heisenberg (ZZ+XX) inter-chain couplings both produce a rise-then-fall lambda sweep. The Ising Hamiltonian gives the stronger signal (peak |C| 0.160 vs 0.118), and the peak shifts from λ = 0.75 (Ising) to λ = 1.5 (Heisenberg).
+
+That peak shift is the point. Two curves peaking at different couplings are not the same curve, and the scaling-collapse test confirms it at χ²/dof = 9.0. The earlier claim of universality rested on a Pearson r that unrelated curves of the same general shape reach 16% of the time. What the data does support is weaker and still worth stating: both couplings produce a cross-field correlation well clear of the noise floor, so the signal is not unique to one interaction.
 
 ### Multi-Basis Discovery — Geometry Has Coordinates
-XY (XX+YY) coupling appeared to produce no geometry when measured in the Z-basis. Rotating the measurement to the X-basis revealed strong geometry (9.93×). Conversely, Ising geometry vanishes in the X-basis (2.15×). The emergent metric tensor has directional structure: ZZ coupling → Z-basis geometry, XX+YY coupling → X-basis geometry. The measurement basis must match the coupling basis.
+XY (XX+YY) coupling appeared to produce no geometry when measured in the Z-basis. Rotating the measurement to the X-basis revealed a clear signal (peak |C| = 0.088 against 0.036 in Z). Conversely, the Ising signal largely vanishes in the X-basis (0.024 against 0.171 in Z). The emergent metric tensor has directional structure: ZZ coupling → Z-basis geometry, XX+YY coupling → X-basis geometry. The measurement basis must match the coupling basis.
+
+This comparison is between two measured numbers rather than against a noise floor, so it does not share the defect in the withdrawn coupling ratios. It has not otherwise been re-examined, and the weaker values sit close to the 0.011 shot-noise scale.
 
 ### Metric Tensor Validation
 The emergent correlation structure does **not** satisfy the mathematical requirements of a metric:

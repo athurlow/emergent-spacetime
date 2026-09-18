@@ -6,14 +6,38 @@
   "ising_sweep": {
     "coupling_type": "ZZ only",
     "values": [
-      {"lambda": 0.0, "avg_C": 0.0056},
-      {"lambda": 0.1, "avg_C": 0.0269},
-      {"lambda": 0.25, "avg_C": 0.0579},
-      {"lambda": 0.5, "avg_C": 0.1005},
-      {"lambda": 0.75, "avg_C": 0.1602},
-      {"lambda": 1.0, "avg_C": 0.1523},
-      {"lambda": 1.5, "avg_C": 0.1361},
-      {"lambda": 2.0, "avg_C": 0.1150}
+      {
+        "lambda": 0.0,
+        "avg_C": 0.0056
+      },
+      {
+        "lambda": 0.1,
+        "avg_C": 0.0269
+      },
+      {
+        "lambda": 0.25,
+        "avg_C": 0.0579
+      },
+      {
+        "lambda": 0.5,
+        "avg_C": 0.1005
+      },
+      {
+        "lambda": 0.75,
+        "avg_C": 0.1602
+      },
+      {
+        "lambda": 1.0,
+        "avg_C": 0.1523
+      },
+      {
+        "lambda": 1.5,
+        "avg_C": 0.1361
+      },
+      {
+        "lambda": 2.0,
+        "avg_C": 0.115
+      }
     ],
     "coupling_ratio": 27.09,
     "tearing_pct": 85.7,
@@ -23,20 +47,66 @@
   "heisenberg_sweep": {
     "coupling_type": "ZZ + XX",
     "values": [
-      {"lambda": 0.0, "avg_C": 0.0097},
-      {"lambda": 0.1, "avg_C": 0.0270},
-      {"lambda": 0.25, "avg_C": 0.0471},
-      {"lambda": 0.5, "avg_C": 0.0829},
-      {"lambda": 0.75, "avg_C": 0.0728},
-      {"lambda": 1.0, "avg_C": 0.0985},
-      {"lambda": 1.5, "avg_C": 0.1177},
-      {"lambda": 2.0, "avg_C": 0.0816}
+      {
+        "lambda": 0.0,
+        "avg_C": 0.0097
+      },
+      {
+        "lambda": 0.1,
+        "avg_C": 0.027
+      },
+      {
+        "lambda": 0.25,
+        "avg_C": 0.0471
+      },
+      {
+        "lambda": 0.5,
+        "avg_C": 0.0829
+      },
+      {
+        "lambda": 0.75,
+        "avg_C": 0.0728
+      },
+      {
+        "lambda": 1.0,
+        "avg_C": 0.0985
+      },
+      {
+        "lambda": 1.5,
+        "avg_C": 0.1177
+      },
+      {
+        "lambda": 2.0,
+        "avg_C": 0.0816
+      }
     ],
-    "coupling_ratio": 10.10,
+    "coupling_ratio": 10.1,
     "tearing_pct": 82.8,
     "peak_lambda": 1.5,
     "monotonicity": "5/7"
   },
-  "curve_correlation": 0.8898,
-  "verdict": "Both Hamiltonians produce emergent geometry with correlated lambda sweep curves, spacetime tearing, and strong coupling ratios"
+  "verdict": "WITHDRAWN. Both Hamiltonians produce a rise-then-fall correlation curve, but the curves are different shapes: they peak at different couplings and fail a scaling-collapse test at chi2/dof = 9.0 with the worst point 4.1 sigma off. The r = 0.89 reflects the shared shape family, not shared physics. What survives is that both couplings produce a cross-field signal well above shot noise.",
+  "curve_correlation_WITHDRAWN": 0.8898,
+  "superseded": {
+    "date": "2026-09-18",
+    "by": "results/corrected_curve_comparisons.json",
+    "script": "src/analysis/12_universality_and_gravity_validation.py",
+    "reason": "curve_correlation was a bare Pearson r on 8 points with no interval, no null distribution and no goodness-of-fit test. Both sweeps rise from zero, peak and fall, and unrelated unimodal curves with a randomly placed peak reach r = 0.89 about 16% of the time, so the value is close to the baseline expectation for any two curves of that shape.",
+    "r_with_interval": {
+      "r": 0.89,
+      "ci_95": [
+        0.811,
+        0.934
+      ]
+    },
+    "scaling_collapse": {
+      "chi2_per_dof": 9.0,
+      "max_residual_sigma": 4.1,
+      "collapses": false,
+      "note": "Fits a shared shape with per-Hamiltonian amplitude and coupling scale. Near 1 would mean the curves are the same shape to within shot noise. The test accepts 84% of genuinely universal pairs, so it is not simply strict."
+    },
+    "peak_lambda_ising": 0.75,
+    "peak_lambda_heisenberg": 1.5,
+    "universality_supported": false
+  }
 }

@@ -144,6 +144,29 @@ xg_clean = [v for v in xy_g_trace if not np.isnan(v)]
 g_corr = np.corrcoef(ig_clean, xg_clean)[0, 1]
 print(f"\n  G_trace correlation (Ising vs XY): r = {g_corr:.4f}")
 
+# This correlation is almost entirely definitional. Both series are
+# 1/(4*lambda*Tr), so they share a 1/lambda factor that was imposed rather
+# than measured. Replacing both measured traces with constants -- measuring
+# nothing at all -- still gives r = 1.0000, so the number above sits BELOW
+# the no-information ceiling and is not evidence of a universal coupling.
+_lam_nz = np.array([l for l in LAMBDAS if l > 0])
+_const_i = 1.0 / (4 * _lam_nz * np.mean([ising['Z'][i] + ising['X'][i] + ising['Y'][i]
+                                         for i in range(1, len(LAMBDAS))]))
+_const_x = 1.0 / (4 * _lam_nz * np.mean([xy['Z'][i] + xy['X'][i] + xy['Y'][i]
+                                         for i in range(1, len(LAMBDAS))]))
+_r_definitional = np.corrcoef(_const_i, _const_x)[0, 1]
+_tr_i = np.array([ising['Z'][i] + ising['X'][i] + ising['Y'][i]
+                  for i in range(1, len(LAMBDAS))])
+_tr_x = np.array([xy['Z'][i] + xy['X'][i] + xy['Y'][i]
+                  for i in range(1, len(LAMBDAS))])
+_r_measured_part = np.corrcoef(_tr_i, _tr_x)[0, 1]
+print(f"  with both measurements replaced by constants: r = {_r_definitional:.4f}")
+print(f"  correlating only the measured part, Tr G:     r = {_r_measured_part:.4f}")
+print("\n  The first line measures nothing and still scores a perfect 1.0000,")
+print("  because 1/lambda correlates perfectly with 1/lambda. The published")
+print("  figure is below that ceiling. The last line is the honest comparison.")
+print("  See 12_universality_and_gravity_validation.py.")
+
 # =============================================================================
 # THE SINGULARITY STRUCTURE
 # =============================================================================
@@ -317,12 +340,16 @@ print("""
      gravitational constant drops. The universe becomes
      less gravitational as it becomes more geometric.
      
-  5. THE GRAVITATIONAL CONSTANT IS (PARTIALLY) UNIVERSAL
-     G_trace correlates between Ising and XY at r = {:.4f}.
-     The total gravitational strength is similar across
-     Hamiltonians even though the directional distribution
-     differs. Different matter content → different gravitational
-     anisotropy, but similar total gravitational coupling.
+  5. THE UNIVERSAL-COUPLING CLAIM IS WITHDRAWN
+     G_trace correlates between Ising and XY at r = {:.4f}, but
+     that number is definitional. Both series are 1/(4*lambda*Tr),
+     so they share an imposed 1/lambda factor; measuring nothing
+     at all scores r = 1.0000 on the same test. Correlating only
+     the measured part, Tr G, gives r = 0.63 with a 95% interval
+     of 0.43 to 0.77, which unrelated curves match 47% of the
+     time, and the two traces fail a scaling-collapse test at
+     chi2/dof = 16.5. There is no evidence here for a universal
+     gravitational coupling.
      
   This is the link between your metric tensor data and gravity.
   The geometry you measured IS the gravitational field.

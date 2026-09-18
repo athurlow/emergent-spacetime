@@ -232,20 +232,47 @@ if ising_sweep and heis_sweep:
         correlation = np.corrcoef(i_avgs, h_avgs)[0, 1]
         print(f"\n  Curve correlation (Ising vs Heisenberg): {correlation:.4f}")
 
-        if correlation > 0.9:
-            print(f"  STRONG UNIVERSALITY: Both Hamiltonians produce the same")
-            print(f"  emergent geometry curve. The geometric signal is NOT an")
-            print(f"  artifact of the specific Hamiltonian.")
-        elif correlation > 0.7:
-            print(f"  MODERATE UNIVERSALITY: Curves are similar but not identical.")
-            print(f"  Geometry partially depends on coupling type.")
-        elif correlation > 0.4:
-            print(f"  WEAK UNIVERSALITY: Some shared structure, but significant")
-            print(f"  differences. Hamiltonian matters more than expected.")
-        else:
-            print(f"  NO UNIVERSALITY: Different Hamiltonians produce different")
-            print(f"  correlation structures. Geometric interpretation may be")
-            print(f"  specific to Heisenberg coupling.")
+        # A bare Pearson r cannot decide universality here. Both sweeps rise
+        # from zero, peak and fall, and any two curves of that shape correlate
+        # strongly whatever physics produced them: unrelated unimodal curves
+        # with a randomly placed peak reach r = 0.89 about 16% of the time.
+        # The thresholds that used to sit here (>0.9 strong, >0.7 moderate)
+        # were arbitrary and were read as evidence.
+        #
+        # The real test is whether the curves collapse onto a common shape
+        # once a non-universal amplitude and coupling scale are allowed, with
+        # residuals consistent with shot noise.
+        print("  A bare correlation cannot settle this; see the collapse test below.")
+
+        try:
+            import os as _os
+            import sys as _sys
+            _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+            from curve_comparison import (scaling_collapse, null_r_distribution,
+                                          shot_noise_sigma)
+
+            _sigma = shot_noise_sigma(8192, N_CHAIN)
+            # Match the lambda grid to the sweeps actually retrieved, which
+            # may be a subset of LAMBDAS if some jobs did not complete.
+            _lams = np.array(sorted(ising_sweep.keys()), dtype=float)
+            _null = null_r_distribution(np.array(i_avgs), _lams, _sigma,
+                                        n_trials=4000)
+            _beats = float(np.mean(_null['samples'] >= correlation))
+            _col = scaling_collapse(_lams, np.array(i_avgs), np.array(h_avgs),
+                                    _sigma)
+            print(f"  unrelated curves reach this r {100 * _beats:.0f}% of the time")
+            print(f"  scaling collapse: chi2/dof = {_col['chi2_per_dof']:.1f}"
+                  f" (worst point {_col['max_residual_sigma']:.1f} sigma)")
+            if _col['collapses']:
+                print("  UNIVERSALITY SUPPORTED: the curves are the same shape")
+                print("  to within measurement error.")
+            else:
+                print("  UNIVERSALITY NOT SUPPORTED: the curves are genuinely")
+                print("  different shapes, however well they correlate. They")
+                print("  also peak at different coupling strengths.")
+        except Exception as _e:  # pragma: no cover - diagnostic path only
+            print(f"  (collapse test unavailable: {_e})")
+            print("  Run 12_universality_and_gravity_validation.py instead.")
 
     # Both monotonic?
     i_total = len(i_avgs) - 1

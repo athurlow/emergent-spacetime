@@ -21,5 +21,26 @@
     1.141552511415525,
     2.5562372188139064
   ],
-  "G_trace_correlation": 0.9986981360902878
+  "G_trace_correlation_WITHDRAWN": 0.9986981360902878,
+  "superseded": {
+    "date": "2026-09-18",
+    "by": "results/corrected_curve_comparisons.json",
+    "script": "src/analysis/12_universality_and_gravity_validation.py",
+    "reason": "Both series are defined as G = 1/(4*lambda*Tr G), so they share a 1/lambda factor that was imposed by the definition rather than measured. Replacing both measured traces with constants, which measures nothing at all, still gives r = 1.0000 on the same test. The published 0.9987 therefore sits below the no-information ceiling.",
+    "r_with_measurements_replaced_by_constants": 1.0,
+    "partial_r_controlling_for_inv_lambda": 0.968,
+    "partial_r_log_scale": 0.782,
+    "measured_part_only": {
+      "quantity": "Tr G, with no imposed 1/lambda",
+      "r": 0.629,
+      "ci_95": [
+        0.431,
+        0.766
+      ],
+      "fraction_of_unrelated_curves_matching_it": 0.47,
+      "scaling_collapse_chi2_per_dof": 16.5
+    },
+    "universal_coupling_supported": false
+  },
+  "verdict": "WITHDRAWN. The r = 0.9987 is definitional, not physical. Correlating only the measured input, Tr G, gives r = 0.63 with a 95% interval of 0.43 to 0.77, which unrelated curves match 47% of the time, and the two traces fail a scaling collapse at chi2/dof = 16.5. No evidence here for a universal gravitational coupling."
 }
