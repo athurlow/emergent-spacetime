@@ -1,0 +1,107 @@
+{
+  "source": "exact simulation of the two-chain circuit",
+  "shots": 8192,
+  "note": "Supersedes the coupling-ratio and triangle-inequality results in earlier versions of the README. Hardware raw counts are not archived, so hardware runs cannot yet be re-analysed.",
+  "baseline_comparison": {
+    "lambda_0.5": {
+      "difference": 0.2471705973148346,
+      "difference_ci": [
+        0.230281350761652,
+        0.26338559463620187
+      ],
+      "z_score": 28.96186203446069,
+      "ratio_lower_bound": 14.215399297856425,
+      "baseline_consistent_with_zero": true
+    },
+    "lambda_1.0": {
+      "difference": 0.24630536139011383,
+      "difference_ci": [
+        0.2304226141422987,
+        0.2615864615887403
+      ],
+      "z_score": 30.84375545362417,
+      "ratio_lower_bound": 14.166696670264635,
+      "baseline_consistent_with_zero": true
+    },
+    "lambda_2.0": {
+      "difference": 0.1366099864244461,
+      "difference_ci": [
+        0.12132104635238648,
+        0.15254101641476156
+      ],
+      "z_score": 17.205147778002576,
+      "ratio_lower_bound": 7.66268631314796,
+      "baseline_consistent_with_zero": true
+    }
+  },
+  "ratio_vs_shots": [
+    {
+      "shots": 1024,
+      "ratio": 22.630684882257775,
+      "difference": 0.22951412200927734
+    },
+    {
+      "shots": 4096,
+      "ratio": 25.194448360267074,
+      "difference": 0.22505724430084229
+    },
+    {
+      "shots": 16384,
+      "ratio": 60.19516816001122,
+      "difference": 0.24053682759404182
+    },
+    {
+      "shots": 65536,
+      "ratio": 108.9624050423124,
+      "difference": 0.2422277983278036
+    }
+  ],
+  "metric_axioms": {
+    "lambda_0.5_inverse": {
+      "pct": 90.47619047619048,
+      "violated": 16,
+      "total": 168,
+      "identity_of_indiscernibles": false,
+      "is_metric": false
+    },
+    "lambda_0.5_log": {
+      "pct": 95.23809523809524,
+      "violated": 8,
+      "total": 168,
+      "identity_of_indiscernibles": false,
+      "is_metric": false
+    },
+    "lambda_1.0_inverse": {
+      "pct": 83.92857142857143,
+      "violated": 27,
+      "total": 168,
+      "identity_of_indiscernibles": false,
+      "is_metric": false
+    },
+    "lambda_1.0_log": {
+      "pct": 88.69047619047619,
+      "violated": 19,
+      "total": 168,
+      "identity_of_indiscernibles": false,
+      "is_metric": false
+    }
+  },
+  "negative_control": {
+    "inverse": {
+      "observed_pct": 83.92857142857143,
+      "scrambled_mean_pct": 81.61309523809523,
+      "scrambled_min_pct": 77.38095238095238,
+      "scrambled_max_pct": 85.71428571428571,
+      "test_can_fail": true,
+      "observed_beats_scrambled": true
+    },
+    "log": {
+      "observed_pct": 92.26190476190476,
+      "scrambled_mean_pct": 89.72023809523809,
+      "scrambled_min_pct": 86.30952380952381,
+      "scrambled_max_pct": 94.04761904761905,
+      "test_can_fail": true,
+      "observed_beats_scrambled": true
+    }
+  }
+}

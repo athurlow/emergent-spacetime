@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Written into the working directory by the older analysis scripts
+/metric_properties_results.json
+/ibm_*_results.json
+/ibm_job_ids.json
