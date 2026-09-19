@@ -640,6 +640,7 @@ section p {
 
 <!-- NAV -->
 <nav class="nav" id="nav">
+  <a href="#status">Status</a>
   <a href="#question">Question</a>
   <a href="#setup">Setup</a>
   <a href="#experiments">Experiments</a>
@@ -652,7 +653,7 @@ section p {
 
 <!-- HERO -->
 <div class="hero">
-  <div class="subtitle">Measured on IBM Quantum Hardware · February 2026</div>
+  <div class="subtitle">Measured on IBM Quantum Hardware · February 2026 · corrected September 2026</div>
   <h1>Emergent <span>Spacetime</span><br>from Entanglement</h1>
   <div class="author">Andrew Thurlow · 528 Labs</div>
   <div class="scroll-hint" onclick="document.getElementById('question').scrollIntoView()">
@@ -660,12 +661,35 @@ section p {
   </div>
 </div>
 
+<!-- CORRECTION NOTICE -->
+<section id="status" class="visible" style="padding-top:3rem;">
+  <div style="border:1px solid var(--coral);border-left:4px solid var(--coral);background:var(--coral-glow);border-radius:8px;padding:1.6rem 1.8rem;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--coral);margin-bottom:0.8rem;">
+      Corrected September 2026 — please read before the results
+    </div>
+    <p style="margin:0 0 0.9rem 0;max-width:none;">
+      A re-analysis in September 2026 withdrew several headline claims made on this page. The hardware data is unchanged and was not the problem; the statistics applied to it were.
+    </p>
+    <ul style="margin:0 0 0.9rem 1.2rem;padding:0;color:var(--text);">
+      <li><strong style="color:var(--bright);">The &ldquo;coupling ratio&rdquo;</strong> divided by a baseline that is exactly zero in theory, so it measured one over the noise floor. It scaled with the square root of the shot count and differed between backends for that reason alone.</li>
+      <li><strong style="color:var(--bright);">The universality result (r = 0.89)</strong> was a correlation that unrelated curves of the same rise-and-fall shape reach about one time in six. The two curves peak at different couplings and fail a scaling-collapse test.</li>
+      <li><strong style="color:var(--bright);">The metric claim</strong> rested on two tests that could not fail on any input. On a real test the triangle inequality is violated for roughly one triple in six, and the construction is a semi-metric, not a metric.</li>
+      <li><strong style="color:var(--bright);">The universal gravitational coupling (r = 0.9987)</strong> was definitional. Both series carry the same imposed 1/&lambda; factor, and measuring nothing at all scores a perfect 1.0000 on the same test.</li>
+      <li><strong style="color:var(--bright);">&ldquo;Spacetime tearing&rdquo;</strong> does not remove entanglement. After the coupling stops the circuit applies only local operations, which cannot change entanglement across the chain cut. The correlator collapses while the entanglement is mathematically frozen.</li>
+    </ul>
+    <p style="margin:0;max-width:none;">
+      What survives is one reproducible result: coupling the chains produces a cross-field correlation well clear of the noise, at 8, 16 and 128 qubits on two processors. The geometric interpretation built on top of it is not supported by this data. Sections below are annotated individually.
+    </p>
+  </div>
+</section>
+
 <!-- THE QUESTION -->
 <section id="question">
   <div class="section-num">01 — The Question</div>
   <h2>Is spacetime made of entanglement?</h2>
   <p>In 2010, physicist Mark Van Raamsdonk proposed a radical idea: spacetime isn't fundamental. It emerges from quantum entanglement between fields. Remove the entanglement, and spacetime tears apart.</p>
-  <p>This idea remained purely theoretical for 15 years. No one had tested it on real quantum hardware. We built a framework to do exactly that.</p>
+  <p>This idea remained largely theoretical. We built a framework to probe it on real quantum hardware.</p>
+  <p style="color:var(--muted);font-size:0.95rem;border-left:2px solid var(--border);padding-left:1rem;">Note on what follows: testing Van Raamsdonk's proposal requires measuring <em>entanglement</em>. Experiments 1 to 8 measured a single-basis correlation function, which cannot tell entanglement from ordinary classical correlation. A measurement that can was added in September 2026 and has not yet been run on hardware.</p>
   
   <div class="card-grid">
     <div class="card">
@@ -681,7 +705,7 @@ section p {
     <div class="card">
       <div class="card-icon">❓</div>
       <h3>The Connection</h3>
-      <p>If entanglement creates spacetime, then quantum computers — which create entanglement on demand — can create tiny spacetimes in the lab.</p>
+      <p>If entanglement creates spacetime, then quantum computers — which create entanglement on demand — offer a place to look for the signature in miniature.</p>
     </div>
   </div>
 </section>
@@ -739,23 +763,26 @@ section p {
 <section id="experiments">
   <div class="section-num">03 — The Experiments</div>
   <h2>Eight experiments. One framework.</h2>
-  <p>Over five days, we ran eight hardware experiments scaling from 8 to 128 qubits, testing different Hamiltonians, measurement bases, and architectures.</p>
+  <p>Over five days, we ran eight hardware experiments scaling from 8 to 128 qubits, testing different Hamiltonians, measurement bases, and architectures. A ninth, measuring entanglement directly, was added in September 2026 and has not yet been run.</p>
 
   <div class="timeline">
     <div class="timeline-item">
       <h4>Experiment 1</h4>
       <h3>The Lambda Sweep</h3>
-      <p>Vary coupling strength from 0 to 2.0. Watch cross-chain correlations grow. Coupling ratio: 27.9× above baseline. Spacetime forms as entanglement increases.</p>
+      <p>Vary coupling strength from 0 to 2.0. Cross-chain correlations grow with it, reaching |C| &asymp; 0.17 against a decoupled baseline consistent with zero.</p>
+      <span style="color:var(--coral);font-size:0.85rem;display:block;margin-top:0.6rem;">Corrected: the &ldquo;27.9&times; above baseline&rdquo; figure is withdrawn. The baseline is a noise floor, so the ratio scaled with shot count rather than with physics.</span>
     </div>
     <div class="timeline-item">
       <h4>Experiment 2</h4>
       <h3>The Null Hypothesis</h3>
-      <p>Run a single chain without a partner. Result: 10-20× less geometric signal. Geometry requires TWO coupled fields — it's relational, not intrinsic.</p>
+      <p>Run a single chain without a partner. The cross-chain structure is much weaker, as expected if the signal requires two coupled fields.</p>
+      <span style="color:var(--coral);font-size:0.85rem;display:block;margin-top:0.6rem;">Not re-examined. The quoted 10-20&times; is a ratio of the same kind withdrawn elsewhere and should be treated as provisional.</span>
     </div>
     <div class="timeline-item">
       <h4>Experiment 3</h4>
       <h3>Universality Test</h3>
-      <p>Ising (ZZ) vs Heisenberg (ZZ+XX) coupling. Both produce the same geometry curve: r = 0.89 correlation. Different physics, same spacetime.</p>
+      <p>Ising (ZZ) vs Heisenberg (ZZ+XX) coupling. Both produce a rise-then-fall correlation curve, but not the same curve: they peak at &lambda; = 0.75 and &lambda; = 1.5.</p>
+      <span style="color:var(--coral);font-size:0.85rem;display:block;margin-top:0.6rem;">Corrected: r = 0.89 is withdrawn as evidence. Unrelated curves of that shape reach it about one time in six, and a scaling-collapse test rejects universality at &chi;&sup2;/dof = 9.0.</span>
     </div>
     <div class="timeline-item">
       <h4>Experiment 4</h4>
@@ -775,12 +802,14 @@ section p {
     <div class="timeline-item">
       <h4>Experiment 7</h4>
       <h3>Metric Tensor Extraction</h3>
-      <p>Combine three bases into a diagonal metric tensor. Positive definite everywhere. 100% triangle inequality satisfaction. This IS a metric.</p>
+      <p>Combine three bases into a diagonal correlation tensor and test it against the metric axioms.</p>
+      <span style="color:var(--coral);font-size:0.85rem;display:block;margin-top:0.6rem;">Corrected: this is not a metric. Positive definiteness holds by construction and cannot fail. The 100% triangle result came from a test that returns 100% for any input, including random numbers. On a real site-to-site test, 83.9% of 168 triples are satisfied and the identity of indiscernibles fails.</span>
     </div>
     <div class="timeline-item">
       <h4>Experiment 8</h4>
       <h3>Gravitational Analysis</h3>
-      <p>Apply Jacobson's derivation: G_eff = 1/(4λC). Direction-dependent gravity. Universal total gravitational coupling: r = 0.9987. Singularity at λ=0.</p>
+      <p>Apply Jacobson's derivation, G_eff = 1/(4&lambda;C), to each tensor component.</p>
+      <span style="color:var(--coral);font-size:0.85rem;display:block;margin-top:0.6rem;">Corrected: the universal coupling (r = 0.9987) is withdrawn. Both series carry the same imposed 1/&lambda; factor, so replacing both measurements with constants still scores 1.0000. Correlating only the measured part gives r = 0.63, which unrelated curves match about half the time.</span>
     </div>
   </div>
 </section>
@@ -788,8 +817,9 @@ section p {
 <!-- LAMBDA SWEEP INTERACTIVE -->
 <section id="sweep">
   <div class="section-num">04 — The Lambda Sweep</div>
-  <h2>Turn up the coupling. Watch spacetime form.</h2>
-  <p>Drag the slider to change the coupling strength λ. The bars show the cross-chain correlation — the geometric signal — measured on IBM Torino hardware.</p>
+  <h2>Turn up the coupling. Watch the correlation grow.</h2>
+  <p>Drag the slider to change the coupling strength λ. The bars show the cross-chain correlation measured on IBM Torino hardware, in each of three measurement bases.</p>
+  <p style="color:var(--muted);font-size:0.95rem;border-left:2px solid var(--border);padding-left:1rem;">This panel previously displayed a &ldquo;coupling ratio&rdquo; against the λ=0 value. That baseline is exactly zero in theory, so the ratio measured the noise floor. The measured correlation is shown instead, against the shot-noise scale of 0.011. Values near or below that scale are not meaningfully distinguishable from zero on a single point.</p>
 
   <div class="sweep-container">
     <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);">
@@ -814,10 +844,13 @@ section p {
         </div>
       </div>
       <div class="sweep-info">
-        <div class="big-num" id="ratioNum">27.9×</div>
-        <div class="big-label">coupling ratio</div>
+        <div class="big-num" id="ratioNum">0.1714</div>
+        <div class="big-label">Z-basis correlation |C|</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--muted);margin-top:0.4rem;">
+          shot-noise scale &asymp; 0.011
+        </div>
         <div style="margin-top:1rem;font-size:0.85rem;color:var(--muted);" id="sweepNote">
-          Peak geometry. Spacetime fully formed.
+          Peak correlation, about 16x the shot-noise scale.
         </div>
       </div>
     </div>
@@ -827,8 +860,9 @@ section p {
 <!-- METRIC TENSOR -->
 <section id="tensor">
   <div class="section-num">05 — The Metric Tensor</div>
-  <h2>Spacetime has shape. We measured it.</h2>
-  <p>By measuring in three bases (Z, X, Y), we extract a diagonal metric tensor — the mathematical object that describes the geometry of spacetime. Each component tells you how "deep" spacetime is in that direction.</p>
+  <h2>The correlations are anisotropic.</h2>
+  <p>Measuring in three bases (Z, X, Y) gives a diagonal correlation tensor whose components differ by direction, and the anisotropy follows the coupling term.</p>
+  <p style="color:var(--coral);font-size:0.9rem;border-left:2px solid var(--coral);padding-left:1rem;">Corrected: this tensor is <strong>not</strong> a metric. The identity of indiscernibles fails, and the triangle inequality is violated for roughly one triple in six. A ZZ coupling producing ZZ correlations is also what the Hamiltonian is built to do, so read this as confirmation that the circuit behaves as designed rather than as a discovery about geometry. All six coupling-and-basis combinations are statistically non-zero; the weaker ones are suppressed, not absent.</p>
 
   <div class="tabs" id="tensorTabs">
     <div class="tab active" onclick="showTensor('ising')">Ising Coupling</div>
@@ -869,8 +903,8 @@ section p {
           <div id="tensorShape" style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--purple);">Needle →</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-size:0.75rem;color:var(--muted);">POSITIVE DEFINITE</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--teal);">✓ YES</div>
+          <div style="font-size:0.75rem;color:var(--muted);">VALID METRIC</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.5rem;color:var(--coral);">✗ NO</div>
         </div>
       </div>
     </div>
@@ -882,8 +916,9 @@ section p {
 <!-- GRAVITY -->
 <section id="gravity">
   <div class="section-num">06 — Emergent Gravity</div>
-  <h2>Where geometry is weak, gravity is strong.</h2>
-  <p>Applying Jacobson's thermodynamic derivation to each tensor component gives direction-dependent gravitational constants. The result: gravity is strongest where spacetime is thinnest.</p>
+  <h2>An effective constant, defined rather than measured.</h2>
+  <p>Applying Jacobson's thermodynamic derivation to each tensor component gives a direction-dependent effective constant. Its only measured input is the correlation; the rest of its shape is imposed by the formula.</p>
+  <p style="color:var(--coral);font-size:0.9rem;border-left:2px solid var(--coral);padding-left:1rem;">Corrected: the universality claim below is withdrawn. Because G is defined as one over &lambda; times a measured quantity, two such series are forced to agree through &lambda; alone.</p>
 
   <div class="gravity-viz">
     <div style="font-size:1rem;color:var(--muted);margin-bottom:1rem;">THE EQUATION</div>
@@ -891,8 +926,8 @@ section p {
       G<sub>eff</sub> = 1 / (4 <span class="highlight">λ</span> · <span class="highlight">C</span>)
     </div>
     <div style="font-size:0.9rem;color:var(--muted);margin-top:0.5rem;">
-      Strong entanglement (C↑) → Strong geometry → Weak gravity (G↓)<br>
-      Zero entanglement (C=0) → No geometry → Infinite gravity (G=∞) → <strong style="color:var(--coral);">Singularity</strong>
+      Strong correlation (C↑) → small G · Weak correlation (C↓) → large G<br>
+      <span style="color:var(--muted);">At λ=0 the expression diverges because it divides by λ. That is arithmetic, not a measured singularity.</span>
     </div>
   </div>
 
@@ -915,14 +950,14 @@ section p {
     <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);margin-bottom:1rem;">
       TOTAL GRAVITATIONAL CONSTANT — UNIVERSALITY CHECK
     </div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:4rem;font-weight:700;color:var(--teal);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:4rem;font-weight:700;color:var(--muted);text-decoration:line-through;">
       r = 0.9987
     </div>
-    <div style="font-size:1.1rem;color:var(--bright);margin:1rem 0;">
-      Ising and XY produce the same total gravity
+    <div style="font-size:1.1rem;color:var(--coral);margin:1rem 0;">
+      Withdrawn — the agreement is definitional
     </div>
-    <div style="font-size:0.9rem;color:var(--muted);max-width:500px;margin:0 auto;">
-      Different Hamiltonians. Different tensor shapes. Different directional gravity. But the <em>total</em> gravitational coupling is virtually identical. This is the equivalence principle emerging from entanglement data.
+    <div style="font-size:0.9rem;color:var(--muted);max-width:620px;margin:0 auto;">
+      Both series are one over &lambda; times a measured quantity, so they share an imposed 1/&lambda; factor. Replacing both measurements with constants, which measures nothing at all, scores a perfect r = 1.0000 on the same test, so the published figure sits <em>below</em> the no-information ceiling. Correlating only the measured input gives r = 0.63 with a 95% interval of 0.43 to 0.77, which unrelated curves match about half the time. There is no evidence here for a universal coupling.
     </div>
   </div>
 </section>
@@ -930,81 +965,97 @@ section p {
 <!-- FINDINGS -->
 <section id="findings">
   <div class="section-num">07 — Key Findings</div>
-  <h2>Twelve results. All from hardware.</h2>
+  <h2>What survives, and what did not.</h2>
+  <p style="color:var(--muted);">Each finding below carries its status after the September 2026 re-analysis: two stand, two are restated, four were never re-examined and are provisional, four are withdrawn, and one is new and awaiting hardware.</p>
 
-  <div class="finding">
-    <div class="finding-num">Finding 01</div>
-    <h4>Geometry scales with coupling</h4>
-    <p>Cross-field correlations increase smoothly with λ. Coupling ratio: 27.9× (Ising Z-basis).</p>
+  <div class="finding" style="border-left-color:var(--teal);">
+    <div class="finding-num" style="color:var(--teal);">Finding 01 — stands</div>
+    <h4>Coupling produces a cross-field correlation</h4>
+    <p>|C| reaches 0.07 to 0.17 against a decoupled baseline that is exactly zero in theory. The signal is roughly twelve times the shot-noise scale and reproduces at 8, 16 and 128 qubits on two processors. This is the one result the project rests on.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 02</div>
-    <h4>Spacetime tears upon decoupling</h4>
-    <p>62–92% correlation collapse at λ=0, consistent with Van Raamsdonk's prediction.</p>
+  <div class="finding" style="border-left-color:var(--gold);">
+    <div class="finding-num" style="color:var(--coral);">Finding 02 — restated</div>
+    <h4>Decoupling suppresses the correlator without removing entanglement</h4>
+    <p>The reduction is 84.3% (95% CI 75.7 to 90.9) on the 8-qubit run, leaving a small residual that simulation predicts. It is not evidence for Van Raamsdonk's disconnection: after the coupling stops the circuit applies only local operations, which cannot change entanglement across the cut. Simulation confirms the entanglement is unchanged to 1e-14 bits while the correlator falls 88%.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 03</div>
-    <h4>Two fields required</h4>
-    <p>Single-chain control shows 10-20× less signal. Geometry is relational, not intrinsic.</p>
+  <div class="finding" style="border-left-color:var(--gold);">
+    <div class="finding-num" style="color:var(--gold);">Finding 03 — provisional</div>
+    <h4>Two fields appear to be required</h4>
+    <p>A single chain shows much weaker cross-chain structure. The quoted 10-20&times; is a ratio of the kind withdrawn elsewhere and has not been re-computed.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 04</div>
-    <h4>Universal across Hamiltonians</h4>
-    <p>Ising and Heisenberg produce the same geometry curve (r = 0.89). Different matter, same spacetime.</p>
+  <div class="finding" style="border-left-color:var(--coral);">
+    <div class="finding-num" style="color:var(--coral);">Finding 04 — withdrawn</div>
+    <h4>Universality across Hamiltonians</h4>
+    <p>Ising and Heisenberg do <em>not</em> produce the same curve. They peak at &lambda; = 0.75 and &lambda; = 1.5 and fail a scaling-collapse test at &chi;&sup2;/dof = 9.0, with the worst point 4.1&sigma; off. The r = 0.89 reflects a shared rise-and-fall shape that unrelated curves reproduce about one time in six.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 05</div>
-    <h4>Scales from 8 to 128 qubits</h4>
-    <p>Framework reproduces at 8, 16, and 128 qubits. Geometry persists at all scales tested.</p>
+  <div class="finding" style="border-left-color:var(--teal);">
+    <div class="finding-num" style="color:var(--teal);">Finding 05 — stands</div>
+    <h4>The signal reproduces from 8 to 128 qubits</h4>
+    <p>Measured on IBM Torino and IBM Fez at three system sizes. The absolute correlation is consistent across them; only the withdrawn ratio varied.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 06</div>
-    <h4>Geometry has tensor structure</h4>
-    <p>Multi-basis measurement reveals basis-dependent components. Z-coupling produces Z-dominant geometry.</p>
+  <div class="finding" style="border-left-color:var(--gold);">
+    <div class="finding-num" style="color:var(--gold);">Finding 06 — restated</div>
+    <h4>The correlations are anisotropic</h4>
+    <p>Z-coupling gives Z-dominant correlations and XY-coupling gives X-dominant ones. All six coupling-and-basis combinations are statistically non-zero, so the signal is suppressed off-axis rather than absent, and the earlier &ldquo;visible / invisible&rdquo; framing was wrong. A ZZ term producing ZZ correlations is what the Hamiltonian is built to do.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 07</div>
+  <div class="finding" style="border-left-color:var(--coral);">
+    <div class="finding-num" style="color:var(--coral);">Finding 07 — withdrawn</div>
     <h4>Positive definite metric</h4>
-    <p>All diagonal components positive at every λ. The emergent structure satisfies the mathematical definition of a metric.</p>
+    <p>The tensor is a diagonal of absolute correlation values, so every eigenvalue is non-negative by construction. The test cannot fail on any input and is not evidence.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 08</div>
+  <div class="finding" style="border-left-color:var(--coral);">
+    <div class="finding-num" style="color:var(--coral);">Finding 08 — withdrawn</div>
     <h4>100% triangle inequality satisfaction</h4>
-    <p>56 out of 56 triangles satisfy the inequality for both Hamiltonians. Distances are consistent.</p>
+    <p>That test compared scalars on a line using |x&#8321; &minus; x&#8322;|, which satisfies the triangle inequality as an algebraic identity. It returns 100% for random numbers. On a real 8&times;8 site-to-site distance matrix, 83.9% of 168 triples are satisfied, and the identity of indiscernibles fails, so the construction is a semi-metric.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 09</div>
+  <div class="finding" style="border-left-color:var(--gold);">
+    <div class="finding-num" style="color:var(--gold);">Finding 09 — provisional</div>
     <h4>Geometric phase transition</h4>
-    <p>Ricci scalar analog shows inflection at λ≈0.31 — accelerating to decelerating geometry, analogous to inflation.</p>
+    <p>The &lambda; &asymp; 0.31 inflection is a second derivative of an 8-point sweep. Re-sampling with shot noise alone puts its 95% interval at 0.04 to 1.58, which spans the whole measured range, and 5% of resamples show no crossing at all.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 10</div>
+  <div class="finding" style="border-left-color:var(--gold);">
+    <div class="finding-num" style="color:var(--gold);">Finding 10 — provisional</div>
     <h4>Eigenvalue evolution</h4>
-    <p>Flatness drops from 0.84 (sphere) to 0.07 (needle). The Hamiltonian sculpts the shape of spacetime.</p>
+    <p>Flatness drops from 0.84 to 0.07 across the sweep. Not re-examined, and it inherits the uncertainty of the underlying per-basis values.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 11</div>
-    <h4>Direction-dependent gravity</h4>
-    <p>G_eff varies by 10× across directions. Gravity pulls perpendicular to the strongest geometry.</p>
+  <div class="finding" style="border-left-color:var(--gold);">
+    <div class="finding-num" style="color:var(--gold);">Finding 11 — provisional</div>
+    <h4>Direction-dependent effective constant</h4>
+    <p>G_eff varies across directions because the measured correlations do. The variation is inherited from Finding 06 rather than being an independent result.</p>
   </div>
-  <div class="finding">
-    <div class="finding-num">Finding 12</div>
+  <div class="finding" style="border-left-color:var(--coral);">
+    <div class="finding-num" style="color:var(--coral);">Finding 12 — withdrawn</div>
     <h4>Universal gravitational coupling</h4>
-    <p>Total G_trace correlates at r = 0.9987 across Hamiltonians. The equivalence principle from entanglement.</p>
+    <p>The r = 0.9987 is definitional. Measuring nothing at all scores 1.0000 on the same test. The measured part alone gives r = 0.63 and fails a scaling collapse at &chi;&sup2;/dof = 16.5.</p>
+  </div>
+  <div class="finding" style="border-left-color:var(--purple);">
+    <div class="finding-num" style="color:var(--purple);">Finding 13 — added, not yet run on hardware</div>
+    <h4>An actual entanglement measurement</h4>
+    <p>Experiment 9 adds local randomized measurements and an entanglement witness, which certifies entanglement even when the device state is mixed. In simulation of the same circuits the coupled and torn states are both certified entangled while the decoupled state is correctly not. The torn state is the point: its correlator has collapsed to about a ninth of the coupled value and its entanglement is intact. This has not been run on a device.</p>
   </div>
 </section>
 
 <!-- WHAT'S NEXT -->
 <section id="next">
   <div class="section-num">08 — What's Next</div>
-  <h2>From toy model to quantum gravity.</h2>
-  <p>This framework is at the trailhead of quantum gravity. The results are consistent with theoretical predictions, but the journey from 8 qubits to a complete theory of quantum gravity is vast.</p>
+  <h2>One measurement comes first.</h2>
+  <p>The re-analysis leaves a clear ordering. Everything below is speculative until the entanglement measurement is actually run, because without it the project has no observable that can distinguish entanglement from ordinary correlation.</p>
 
   <div class="card-grid">
+    <div class="card" style="grid-column:1 / -1;border-color:var(--purple);">
+      <div class="card-icon">🎯</div>
+      <h3>Run the entanglement experiment</h3>
+      <p>Experiment 9 is written, validated against exactly known values, and checked against a separable control that it correctly declines to certify. It needs 2000 random measurement bases per state on a device. Until it runs, every entanglement number in this project is simulation. This is the only step that can move the results, and the only one that should be taken next.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💾</div>
+      <h3>Archive the raw counts</h3>
+      <p>The stored results hold derived summaries only, so none of the hardware analysis can be independently re-run or checked. Re-archiving the bitstring counts is the cheapest fix and the largest single gain in credibility available.</p>
+    </div>
     <div class="card">
       <div class="card-icon">⚛️</div>
       <h3>Cross-Platform Validation</h3>
-      <p>Run the same experiments on IonQ trapped ion hardware via Amazon Braket. If geometry reproduces on atoms instead of wires, it's a property of quantum mechanics itself.</p>
+      <p>Run the same experiments on trapped-ion hardware. If the correlation reproduces on atoms instead of wires, it is a property of the physics rather than of one device.</p>
     </div>
     <div class="card">
       <div class="card-icon">💥</div>
@@ -1026,7 +1077,10 @@ section p {
   <div style="text-align:center;margin-top:3rem;">
     <div style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem;">Open Source</div>
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--bright);">
-      All code, data, and figures are public.
+      All code and figures are public.
+    </div>
+    <div style="font-size:0.85rem;color:var(--muted);max-width:520px;margin:0.8rem auto 0;">
+      Raw bitstring counts were not archived, so the hardware analysis cannot yet be independently reproduced. The corrected analysis, its controls and 70 tests are in the repository.
     </div>
     <div style="margin-top:1rem;">
       <a href="https://github.com/athurlow/emergent-spacetime" target="_blank" style="display:inline-block;padding:0.8rem 2rem;background:var(--teal);color:var(--void);border-radius:8px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:0.85rem;font-weight:700;letter-spacing:1px;transition:all 0.3s;">
@@ -1037,10 +1091,10 @@ section p {
 </section>
 
 <div class="footer">
-  Andrew Thurlow · 528 Labs · February 2026<br>
+  Andrew Thurlow · 528 Labs · February 2026 · corrected September 2026<br>
   <a href="https://github.com/athurlow/emergent-spacetime">github.com/athurlow/emergent-spacetime</a><br>
   <span style="font-size:0.8rem;margin-top:0.5rem;display:inline-block;">
-    IBM Torino · IBM Fez · 8 Experiments · 14 Figures · 12 Findings
+    IBM Torino · IBM Fez · 8 hardware experiments · 1 awaiting hardware · 13 findings, 4 withdrawn
   </span>
 </div>
 
@@ -1067,14 +1121,14 @@ const isingX = [0.0079, 0.0095, 0.0080, 0.0145, 0.0240, 0.0169, 0.0207, 0.0097];
 const isingY = [0.0077, 0.0129, 0.0273, 0.0253, 0.0207, 0.0198, 0.0102, 0.0182];
 
 const notes = [
-  "No coupling. No entanglement. No geometry. Singularity.",
-  "Faint geometry emerging from the noise floor.",
-  "Geometry clearly visible. Spacetime is forming.",
-  "Strong geometry. Z-component dominates.",
-  "Near-peak geometry. Tensor highly anisotropic.",
-  "Peak geometry. Spacetime fully formed.",
+  "No coupling. The measured value here is shot noise, not signal.",
+  "At the noise floor. Not distinguishable from zero.",
+  "Above the noise floor. A real correlation is present.",
+  "Strong correlation. Z-component dominates.",
+  "Near the peak. Strongly anisotropic across bases.",
+  "Peak correlation, about 16x the shot-noise scale.",
   "Past the peak. Trotter error accumulating.",
-  "Geometry persists but weakening at extreme coupling."
+  "Correlation persists but weakens at extreme coupling."
 ];
 
 const slider = document.getElementById('lambdaSlider');
@@ -1093,8 +1147,11 @@ function updateSweep() {
   document.getElementById('barX').style.width = Math.max(5, (isingX[i]/maxVal)*100) + '%';
   document.getElementById('barY').style.width = Math.max(5, (isingY[i]/maxVal)*100) + '%';
   
-  const ratio = isingZ[i] / isingZ[0];
-  document.getElementById('ratioNum').textContent = ratio.toFixed(1) + '×';
+  // Previously this displayed isingZ[i] / isingZ[0], a ratio against the
+  // decoupled baseline. That baseline is exactly zero in theory, so the
+  // ratio measured the noise floor rather than the signal. The measured
+  // correlation is shown instead, against the shot-noise scale.
+  document.getElementById('ratioNum').textContent = isingZ[i].toFixed(4);
   document.getElementById('sweepNote').textContent = notes[i];
 }
 
