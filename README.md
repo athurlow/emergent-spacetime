@@ -20,7 +20,15 @@ Several headline claims from earlier versions have since been withdrawn after re
 
 > Earlier versions of this README reported this as a "coupling ratio" of 8× to 27× above the uncoupled baseline. That figure has been withdrawn. With the inter-chain term removed the two chains are in a product state, so the true decoupled correlation is exactly zero and the measured baseline is pure shot noise. The ratio was therefore one over the noise floor: it scales as √shots and varies with the backend, which is why the same 8-qubit experiment gave 95.7× on Torino and 13.7× on Fez. The measured correlation and its difference from baseline are reported instead. See `src/analysis/11_baseline_and_metric_validation.py`.
 
-**2. Removing coupling destroys geometry.** "Spacetime tearing" — 62–92% correlation collapse upon decoupling — confirmed across all experiments, consistent with Van Raamsdonk's disconnection prediction.
+**2. Decoupling suppresses the correlator without removing entanglement.** Turning off the inter-chain coupling partway through reduces the cross-field ZZ correlator by 84.3% (95% CI 75.7% to 90.9%) on the 8-qubit Torino run, leaving a small residual that simulation independently predicts. The entanglement across the two-chain cut is **unchanged** by that step.
+
+> Earlier versions reported this as "62–92% correlation collapse upon decoupling, consistent with Van Raamsdonk's disconnection prediction". Both halves of that have been corrected.
+>
+> **The entanglement does not go anywhere.** After the coupling stops, the circuit continues with intra-chain gates only, which is a product of local unitaries acting separately on each chain. Local unitaries cannot change entanglement across the cut between them. That is a theorem, and simulation confirms it to 1e-14 bits: the torn state and its own coupling stage have identical entropy while the correlator falls 88%. The torn state also carries *more* entanglement than the 6-step run it was compared against, because it ran fewer coupling steps. Van Raamsdonk's prediction is about entanglement, so this experiment cannot bear on it as built.
+>
+> **The percentage is capped.** The estimator averages absolute correlations, which is biased upward, so the reduction is biased downward and cannot reach 100% even if the residual were exactly zero. That cap is 93.4% for the Torino run, which sits inside the old 62–92% range. The 16-region spread on the 128-qubit chip (28.9% to 93.3%) cannot be decomposed without per-region coupled values, which are not archived, so it should not be quoted as a range of physical behaviour.
+>
+> What survives is a clean negative lesson: a single-basis ZZ correlator is not a proxy for entanglement. See `src/analysis/13_tearing_validation.py`.
 
 **3. Both Hamiltonians produce a signal, but not the same curve.** Ising (ZZ) and Heisenberg (ZZ+XX) inter-chain couplings both generate cross-field correlations well above shot noise. They are **not** the same curve: they peak at different couplings (λ = 0.75 vs λ = 1.5) and fail a scaling-collapse test at χ²/dof = 9.0, with the worst point 4.1σ off.
 
@@ -62,6 +70,8 @@ All runs used 8192 shots per circuit. The column reports the measured coupled cr
 
 The shot-noise scale on a single correlator at 8192 shots is 0.011, so the coupled signals above sit well clear of it. Per-run confidence intervals are not quoted because raw bitstring counts were not archived; see the reproducibility note below.
 
+The tearing column is retained as originally reported and should be read with result 2 above. Each figure is capped by the coupled signal strength of its own run, so these percentages are not comparable across rows, and none of them measures a change in entanglement.
+
 ## Repository Structure
 
 ```
@@ -72,7 +82,7 @@ emergent-spacetime/
 ├── figures/
 │   ├── fig1_correlation_matrix.png             # Coupled vs uncoupled structure
 │   ├── fig2_lambda_sweep.png                   # Coupling strength sweep
-│   ├── fig3_tearing.png                        # Spacetime disconnection
+│   ├── fig3_tearing.png                        # Correlator suppression on decoupling
 │   ├── fig4_null_hypothesis.png                # Two-field vs single-field
 │   ├── fig5_hardware_torino.png                # IBM Torino validation
 │   ├── fig6_hardware_fez.png                   # IBM Fez confirmation
@@ -157,6 +167,7 @@ This produces the full lambda sweep, tearing experiment, null hypothesis compari
 pip install qiskit qiskit-aer numpy pytest
 python src/analysis/11_baseline_and_metric_validation.py
 python src/analysis/12_universality_and_gravity_validation.py
+python src/analysis/13_tearing_validation.py
 python -m pytest tests/ -q
 ```
 
@@ -167,16 +178,18 @@ python -m pytest tests/ -q
 | `src/analysis/two_chain_model.py` | Circuit, exact correlations and sampled counts, so tests run on real data rather than pasted numbers |
 | `src/analysis/curve_comparison.py` | Correlation with intervals, a calibrated null for rise-then-fall curves, partial correlation, leverage, and a scaling-collapse test for universality |
 | `src/analysis/11_baseline_and_metric_validation.py` | Runs the baseline and metric-axiom analyses end to end |
+| `src/analysis/tearing_analysis.py` | Reduction with an interval, the ceiling the estimator imposes, and an upper bound on the residual correlation |
 | `src/analysis/12_universality_and_gravity_validation.py` | Runs the universality and emergent-gravity analyses end to end |
-| `tests/` | 32 tests, including several that document the defects being fixed |
+| `src/analysis/13_tearing_validation.py` | Runs the tearing analysis, including the entanglement-invariance demonstration |
+| `tests/` | 45 tests, including several that document the defects being fixed |
 
 ### Known outstanding issues
 
 - The repository-structure tree above is stale: 17 of the 31 files it lists do not exist under those names, including the simulator named in the Quick Start. The simulator is at `src/simulation/qiskit_experiment.py`.
 - Experiment 3 (2×2 lattice) has a retrieve script but no run script and no archived results.
 - No error mitigation is applied on any hardware run.
-- The hardware pipeline measures single-basis ZZ correlators only. These cannot distinguish entanglement from classical correlation, so claims about entanglement specifically are not yet supported by the hardware data. The tomography circuits built in experiment 3 are submitted but never analysed.
-- The tearing experiment removes the entangling gate, so the correlation collapse is guaranteed by construction rather than being an independent prediction under test.
+- The hardware pipeline measures single-basis ZZ correlators only. These cannot distinguish entanglement from classical correlation, so claims about entanglement specifically are not supported by the hardware data. The tearing analysis now demonstrates this concretely: the correlator can collapse while the entanglement is provably frozen. The tomography circuits built in experiment 3 are submitted but never analysed.
+- Testing disconnection properly needs an entanglement measure such as negativity or a witness, which requires measurements in more than one basis. None of the eight experiments does this.
 - The Ricci scalar analog and the eigenvalue-spectrum results have not been re-examined. The λ ≈ 0.31 inflection is a second derivative of an 8-point sweep and is unlikely to survive an uncertainty analysis.
 
 ## Theoretical Framework

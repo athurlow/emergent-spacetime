@@ -20,10 +20,12 @@ import json
 
 import numpy as np
 from qiskit import QuantumCircuit
-from qiskit.quantum_info import Statevector
+from qiskit.quantum_info import Statevector, entropy, partial_trace
 
 __all__ = [
     "build_two_chain_circuit",
+    "build_torn_circuit",
+    "bipartite_entropy",
     "exact_correlation_matrix",
     "sample_counts",
     "load_hardware_counts",
@@ -115,3 +117,42 @@ def load_hardware_counts(path: str, label: str) -> dict | None:
     if not isinstance(counts, dict):
         return None
     return {k: int(v) for k, v in counts.items()}
+
+def _intra_chain_step(qc: QuantumCircuit, n_per_chain: int, j_intra: float,
+                      dt: float) -> None:
+    """One Trotter step of intra-chain ZZ + XX on both chains, no coupling."""
+    for base in (0, n_per_chain):
+        for i in range(base, base + n_per_chain - 1):
+            qc.cx(i, i + 1)
+            qc.rz(2 * j_intra * dt, i + 1)
+            qc.cx(i, i + 1)
+            qc.h(i)
+            qc.h(i + 1)
+            qc.cx(i, i + 1)
+            qc.rz(2 * j_intra * dt, i + 1)
+            qc.cx(i, i + 1)
+            qc.h(i)
+            qc.h(i + 1)
+
+
+def build_torn_circuit(n_per_chain: int, j_intra: float, j_inter: float,
+                       total_steps: int, dt: float) -> QuantumCircuit:
+    """The "spacetime tearing" circuit, as built by the experiment scripts.
+
+    Evolves with inter-chain coupling for half the Trotter steps, then
+    continues with intra-chain evolution only. The second half therefore
+    applies a product of local unitaries U_A (x) U_B, which cannot change
+    the entanglement across the A:B cut no matter how many steps run.
+    """
+    half = total_steps // 2
+    qc = build_two_chain_circuit(n_per_chain, j_intra, j_inter, half, dt)
+    for _ in range(half):
+        _intra_chain_step(qc, n_per_chain, j_intra, dt)
+    return qc
+
+
+def bipartite_entropy(qc: QuantumCircuit, n_per_chain: int) -> float:
+    """Von Neumann entropy across the chain-A / chain-B cut, in bits."""
+    sv = Statevector.from_instruction(qc)
+    reduced = partial_trace(sv, list(range(n_per_chain, qc.num_qubits)))
+    return float(entropy(reduced))
