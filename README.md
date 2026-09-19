@@ -31,7 +31,9 @@ Several headline claims from earlier versions have since been withdrawn after re
 - XY (XX+YY) coupling → peak |C| = 0.088 in the X-basis, 0.036 in the Z-basis
 - Magnitude from coupling strength. Shape from Hamiltonian symmetry.
 
-> Figures here were previously quoted as ratios against the decoupled baseline (27.9×, 2.15×, 9.93×, 5.66×). They are restated as measured correlations for the reason given under result 1. The basis contrast itself is unaffected, since it compares two measured numbers rather than dividing by a noise floor. The shot-noise scale is 0.011, so the X-basis Ising value of 0.024 is close to it and should not be read as a confident non-zero.
+> Figures here were previously quoted as ratios against the decoupled baseline (27.9×, 2.15×, 9.93×, 5.66×). They are restated as measured correlations for the reason given under result 1. The basis contrast itself is unaffected, since it compares two measured numbers rather than dividing by a noise floor.
+>
+> The signal is strongly basis-dependent but it does not vanish in any basis. Each value above is a mean of |C| over four pairs, whose noise-only expectation is 0.0088 with a 95th percentile of 0.0147. All six coupling-and-basis combinations exceed that: the weakest, Ising in the X-basis at 0.024, has p = 0.0001 against the null. "Invisible in the X-basis" was the wrong description, and so was an earlier note here calling 0.024 indistinguishable from noise. Off-axis is 7× weaker for Ising and 2.4× weaker for XY, not absent.
 
 **5. The emergent distance is a semi-metric, not a metric.** Testing the correlation tensor against the metric axioms:
 - Positive definiteness holds, but trivially: the tensor is a diagonal of absolute correlation values, so this cannot fail and is not evidence.
@@ -198,9 +200,9 @@ Ising (ZZ-only) and Heisenberg (ZZ+XX) inter-chain couplings both produce a rise
 That peak shift is the point. Two curves peaking at different couplings are not the same curve, and the scaling-collapse test confirms it at χ²/dof = 9.0. The earlier claim of universality rested on a Pearson r that unrelated curves of the same general shape reach 16% of the time. What the data does support is weaker and still worth stating: both couplings produce a cross-field correlation well clear of the noise floor, so the signal is not unique to one interaction.
 
 ### Multi-Basis Discovery — Geometry Has Coordinates
-XY (XX+YY) coupling appeared to produce no geometry when measured in the Z-basis. Rotating the measurement to the X-basis revealed a clear signal (peak |C| = 0.088 against 0.036 in Z). Conversely, the Ising signal largely vanishes in the X-basis (0.024 against 0.171 in Z). The emergent metric tensor has directional structure: ZZ coupling → Z-basis geometry, XX+YY coupling → X-basis geometry. The measurement basis must match the coupling basis.
+XY (XX+YY) coupling produces a much weaker signal in the Z-basis (peak |C| = 0.036) than in the X-basis (0.088). Ising is the other way round: 0.171 in Z against 0.024 in X. The correlation structure is anisotropic and the anisotropy follows the coupling term, which is the substance of this result.
 
-This comparison is between two measured numbers rather than against a noise floor, so it does not share the defect in the withdrawn coupling ratios. It has not otherwise been re-examined, and the weaker values sit close to the 0.011 shot-noise scale.
+Two caveats. The signal is weaker off-axis, not absent: all six combinations are statistically clear non-zeros, so the earlier "visible / invisible" framing was wrong. And a ZZ coupling term generating ZZ correlations is what the Hamiltonian is built to do, so this is better read as confirmation that the circuit behaves as designed than as a discovery about geometry. The comparison is between two measured numbers rather than against a noise floor, so it does not share the defect in the withdrawn coupling ratios.
 
 ### Metric Tensor Validation
 The emergent correlation structure does **not** satisfy the mathematical requirements of a metric:
