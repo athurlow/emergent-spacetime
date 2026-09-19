@@ -24,38 +24,12 @@ LAMBDAS = [0.0, 0.1, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0]
 # Per-qubit-pair cross-field correlations (4 pairs per experiment)
 # From multi-basis run: each row is [q0, q1, q2, q3] at given lambda
 
-ising_data = {
-    'Z': {
-        0.0:  [0.0061, 0.0079, 0.0077, 0.0061],  # Using avg for now
-        0.1:  [0.0126, 0.0095, 0.0129, 0.0126],
-        0.25: [0.0371, 0.0080, 0.0273, 0.0371],
-        0.5:  [0.0960, 0.0145, 0.0253, 0.0960],
-        0.75: [0.1426, 0.0240, 0.0207, 0.1426],
-        1.0:  [0.1714, 0.0169, 0.0198, 0.1714],
-        1.5:  [0.1394, 0.0207, 0.0102, 0.1394],
-        2.0:  [0.1117, 0.0097, 0.0182, 0.1117],
-    },
-    'X': {
-        0.0:  [0.0079, 0.0079, 0.0077, 0.0079],
-        0.1:  [0.0095, 0.0095, 0.0129, 0.0095],
-        0.25: [0.0080, 0.0080, 0.0273, 0.0080],
-        0.5:  [0.0145, 0.0145, 0.0253, 0.0145],
-        0.75: [0.0240, 0.0240, 0.0207, 0.0240],
-        1.0:  [0.0169, 0.0169, 0.0198, 0.0169],
-        1.5:  [0.0207, 0.0207, 0.0102, 0.0207],
-        2.0:  [0.0097, 0.0097, 0.0182, 0.0097],
-    },
-    'Y': {
-        0.0:  [0.0077, 0.0079, 0.0077, 0.0077],
-        0.1:  [0.0129, 0.0095, 0.0129, 0.0129],
-        0.25: [0.0273, 0.0080, 0.0273, 0.0273],
-        0.5:  [0.0253, 0.0145, 0.0253, 0.0253],
-        0.75: [0.0207, 0.0240, 0.0207, 0.0207],
-        1.0:  [0.0198, 0.0169, 0.0198, 0.0198],
-        1.5:  [0.0102, 0.0207, 0.0102, 0.0102],
-        2.0:  [0.0182, 0.0097, 0.0182, 0.0182],
-    }
-}
+# NOTE: a per-qubit-pair block previously sat here. It was removed because
+# it was not measured data: the fourth pair duplicated the first in every
+# row, and the X and Y rows were permutations of the same three numbers as
+# Z, so 96 apparent values contained 24 real ones. It was never read by any
+# test in this file. Per-site analysis now uses a real correlation matrix
+# via metric_axioms.py; see 11_baseline_and_metric_validation.py.
 
 # Average values for scalar analysis
 ising_avg = {
@@ -122,139 +96,49 @@ for i, lam in enumerate(LAMBDAS):
 print(f"\n{'=' * 70}")
 print("TEST 2: TRIANGLE INEQUALITY")
 print("=" * 70)
-print("\nFor a valid metric space, d(A,C) ≤ d(A,B) + d(B,C).")
-print("We define distance from correlation: d(i,j) = 1/|C(i,j)|")
-print("Testing on the 4 qubit pairs in each chain.\n")
+print("""
+This test previously compared scalars on a line:
 
-# Use original Ising Z-basis data from the first Torino run
-# which has per-site correlations
-# We need the full correlation matrix, not just cross-chain
-# For now, use cross-chain pairs as "sites" and test triangle inequality
-# on the tensor-derived distances
+    d(lambda_i, lambda_j) = | Tr G(lambda_i) - Tr G(lambda_j) |
 
-# Tensor-derived distance: use trace as the correlation measure
-# d(λ) = 1 / Tr(G(λ)) — distance as function of coupling
+For real numbers |a - c| <= |a - b| + |b - c| is an identity, so that test
+returned 100% for any input at all, including random noise. It measured
+nothing about the emergent geometry, and the per-site triangle list written
+alongside it was never iterated.
 
-print("  Tensor-trace derived distances:")
-print(f"  {'λ':<8} {'Ising Tr':<12} {'Ising d':<12} {'XY Tr':<12} {'XY d':<12}")
-print(f"  {'-' * 52}")
+The real test needs site-to-site distances from a full correlation matrix.
+It now lives in metric_axioms.py, which checks every triple of the 8 sites
+against all four metric axioms and ships a negative control showing the test
+can fail. Run:
 
-ising_distances = []
-xy_distances = []
+    python src/analysis/11_baseline_and_metric_validation.py
 
-for i, lam in enumerate(LAMBDAS):
-    i_tr = ising_avg['X'][i] + ising_avg['Y'][i] + ising_avg['Z'][i]
-    x_tr = xy_avg['X'][i] + xy_avg['Y'][i] + xy_avg['Z'][i]
-    i_d = 1.0 / max(i_tr, 1e-10)
-    x_d = 1.0 / max(x_tr, 1e-10)
-    ising_distances.append(i_d)
-    xy_distances.append(x_d)
-    print(f"  {lam:<8} {i_tr:<12.4f} {i_d:<12.2f} {x_tr:<12.4f} {x_d:<12.2f}")
+Summary of the corrected result, from simulation of the same circuit at
+8192 shots (hardware raw counts are not archived in results/):
 
-# For the spatial triangle inequality, we need distances between
-# different SITES, not different lambda values.
-# Use the per-basis correlations between qubit pairs as site distances
+    d(i,j) = 1/|C(i,j)|      83.9% of 168 triples satisfied at lambda = 1.0
+    d(i,j) = -log|C(i,j)|    88.7% of 168 triples satisfied at lambda = 1.0
 
-print(f"\n  Spatial triangle inequality test (Ising Z-basis, λ=1.0):")
-print(f"  Sites: 4 cross-chain pairs as vertices")
+    identity of indiscernibles: FAILS for both, since d(i,i) is non-zero.
+
+The emergent distance is therefore a semi-metric, not a metric. The earlier
+claim of 100% satisfaction does not survive a test that is able to fail.
+""")
+
+# Trace of the diagonal tensor at each lambda. Used by the Ricci analog in
+# TEST 4 below. These come from the per-basis scalar sweeps, which are real
+# measurements, unlike the per-pair block that was removed above.
+ising_traces = [ising_avg['X'][i] + ising_avg['Y'][i] + ising_avg['Z'][i]
+                for i in range(len(LAMBDAS))]
+xy_traces = [xy_avg['X'][i] + xy_avg['Y'][i] + xy_avg['Z'][i]
+             for i in range(len(LAMBDAS))]
+
+print("  Tensor traces Tr(G) by coupling strength:")
+print(f"  {'lambda':<10}{'Ising':<12}{'XY':<12}")
+print(f"  {'-' * 34}")
+for _i, _lam in enumerate(LAMBDAS):
+    print(f"  {_lam:<10}{ising_traces[_i]:<12.4f}{xy_traces[_i]:<12.4f}")
 print()
-
-# At lambda=1.0, Ising Z-basis: use the original hardware data
-# We have cross-chain correlations C(0,4), C(1,5), C(2,6), C(3,7)
-# For intra-chain, we'd need the full 8x8 correlation matrix
-# Instead, test ordering: do correlations decay with chain distance?
-
-# From the original Torino 8-qubit run, we know intra-chain correlations
-# decay with distance. Use the lambda=1.0 Ising data as example.
-
-# Reconstructed from original paper data (8-qubit Torino, lambda=1.0):
-# These are approximate values from the correlation matrix
-print("  Using correlation-derived distances d(i,j) = 1/|C(i,j)|")
-print("  From original 8-qubit Torino data at λ=1.0:\n")
-
-# Cross-chain pairs (strongly correlated = short distance)
-# Intra-chain nearest-neighbor (moderate correlation)
-# Intra-chain next-nearest (weaker correlation)
-# Cross-chain non-corresponding (weakest)
-
-# Example triangle: sites 0, 1, 4 (chain A qubit 0, chain A qubit 1, chain B qubit 0)
-# d(0,1) = intra-chain nearest neighbor
-# d(0,4) = cross-chain corresponding (strong)
-# d(1,4) = cross-chain non-corresponding (weaker)
-
-# We can construct example triangles from the known correlation structure
-# Using typical values from the data:
-
-triangles = [
-    ("Corresponding cross-chain", 0.171, "Adjacent intra-chain", 0.085, "Non-adj cross-chain", 0.042),
-    ("Adjacent intra-chain", 0.085, "Next-nearest intra", 0.035, "Corresponding cross", 0.171),
-]
-
-print(f"  {'Triangle':<60} {'d(A,B)+d(B,C)':<15} {'d(A,C)':<10} {'Valid?'}")
-print(f"  {'-' * 95}")
-
-# General triangle inequality test using tensor distances across lambda
-# Treat each lambda as a "point" in coupling space
-# Distance between lambda_i and lambda_j defined by |Tr(G(λ_i)) - Tr(G(λ_j))|
-# This tests whether the coupling-space geometry is consistent
-
-print(f"\n  Coupling-space triangle inequality:")
-print(f"  Using |Tr(G(λ_i)) - Tr(G(λ_j))| as distance in coupling space\n")
-
-ising_traces = [ising_avg['X'][i] + ising_avg['Y'][i] + ising_avg['Z'][i] for i in range(len(LAMBDAS))]
-xy_traces = [xy_avg['X'][i] + xy_avg['Y'][i] + xy_avg['Z'][i] for i in range(len(LAMBDAS))]
-
-n_triangles = 0
-n_satisfied = 0
-
-for name, traces in [('Ising', ising_traces), ('XY', xy_traces)]:
-    sat = 0
-    total = 0
-    for i in range(len(LAMBDAS)):
-        for j in range(i+1, len(LAMBDAS)):
-            for k in range(j+1, len(LAMBDAS)):
-                d_ij = abs(traces[i] - traces[j])
-                d_jk = abs(traces[j] - traces[k])
-                d_ik = abs(traces[i] - traces[k])
-                
-                # All three triangle inequalities
-                t1 = d_ij + d_jk >= d_ik
-                t2 = d_ij + d_ik >= d_jk
-                t3 = d_jk + d_ik >= d_ij
-                
-                total += 1
-                if t1 and t2 and t3:
-                    sat += 1
-    
-    pct = 100 * sat / max(total, 1)
-    print(f"  {name}: {sat}/{total} triangles satisfied ({pct:.1f}%)")
-    n_triangles += total
-    n_satisfied += sat
-
-# Now test using 1/Tr as distance (the inverse-correlation metric)
-print(f"\n  Using d(λ) = 1/Tr(G(λ)) as emergent distance:\n")
-
-for name, traces in [('Ising', ising_traces), ('XY', xy_traces)]:
-    inv_d = [1.0/max(t, 1e-10) for t in traces]
-    sat = 0
-    total = 0
-    for i in range(len(LAMBDAS)):
-        for j in range(i+1, len(LAMBDAS)):
-            for k in range(j+1, len(LAMBDAS)):
-                d_ij = abs(inv_d[i] - inv_d[j])
-                d_jk = abs(inv_d[j] - inv_d[k])
-                d_ik = abs(inv_d[i] - inv_d[k])
-                
-                t1 = d_ij + d_jk >= d_ik - 1e-10  # small tolerance
-                t2 = d_ij + d_ik >= d_jk - 1e-10
-                t3 = d_jk + d_ik >= d_ij - 1e-10
-                
-                total += 1
-                if t1 and t2 and t3:
-                    sat += 1
-    
-    pct = 100 * sat / max(total, 1)
-    print(f"  {name}: {sat}/{total} triangles satisfied ({pct:.1f}%)")
 
 # =============================================================================
 # TEST 3: METRIC SYMMETRY
@@ -402,13 +286,18 @@ print("OVERALL VERDICT: IS THIS A REAL METRIC?")
 print("=" * 70)
 
 print(f"""
-  TEST 1 — Positive definiteness:     PASSED ✓
-    All diagonal components positive at every λ.
-    The metric tensor is valid (positive definite) everywhere.
+  TEST 1 — Positive definiteness:     PASSED (but trivially)
+    G is a diagonal matrix of absolute correlation values, so
+    every eigenvalue is non-negative by construction. This test
+    cannot fail either, and should not be read as evidence.
     
-  TEST 2 — Triangle inequality:        PASSED ✓
-    100% of coupling-space triangles satisfied for both
-    correlation-difference and inverse-correlation metrics.
+  TEST 2 — Triangle inequality:        FAILS (superseded)
+    The old coupling-space test was an identity and could not
+    fail. On a real site-to-site distance matrix, 83.9% of 168
+    triples are satisfied at lambda = 1.0 (d = 1/|C|), and the
+    identity of indiscernibles fails outright. The emergent
+    distance is a semi-metric, not a metric.
+    See 11_baseline_and_metric_validation.py.
     
   TEST 3 — Symmetry:                   PASSED ✓ (by construction)
     Correlation functions are inherently symmetric.
@@ -432,10 +321,12 @@ print(f"""
     components are noisy, as expected for hardware measurements
     near the noise floor.
 
-  CONCLUSION:
-  The emergent correlation structure satisfies the mathematical
-  requirements of a metric tensor: positive definiteness, symmetry,
-  and triangle inequality. It has physically meaningful properties:
+  CONCLUSION (revised):
+  The emergent correlation structure does NOT satisfy the
+  mathematical requirements of a metric. Positive definiteness and
+  symmetry hold by construction rather than by measurement, the
+  triangle inequality is violated for about one triple in six, and
+  the identity of indiscernibles fails. What remains is:
   a Ricci scalar analog showing geometric phase transitions, an
   eigenvalue spectrum that evolves from isotropic to anisotropic
   with coupling, and dominant components aligned with the Hamiltonian

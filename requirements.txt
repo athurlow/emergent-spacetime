@@ -1,0 +1,13 @@
+# Core analysis and simulation
+numpy>=1.24
+qiskit>=1.0
+qiskit-aer>=0.14
+
+# Hardware runs only
+qiskit-ibm-runtime>=0.20
+
+# Figures
+matplotlib>=3.7
+
+# Tests
+pytest>=7.0

@@ -1,0 +1,46 @@
+{
+  "torino_4x4": {
+    "coupled_mean_abs": 0.13315,
+    "torn_mean_abs": 0.02085,
+    "reduction_pct": 84.3409688321442,
+    "reduction_ci": [
+      75.66631175772704,
+      90.90500046355362
+    ],
+    "ceiling_pct": 93.37544071546724,
+    "reduction_is_at_ceiling": false,
+    "shots": 8192,
+    "n_pairs": 4,
+    "confidence": 0.95,
+    "residual": {
+      "observed_mean_abs": 0.02085,
+      "noise_only_expected": 0.008820600687355368,
+      "noise_only_p95": 0.014759662304250144,
+      "p_value_vs_zero": 0.00141,
+      "consistent_with_zero": false,
+      "upper_bound": 0.029772026769389153,
+      "confidence": 0.95
+    }
+  },
+  "fullchip_128q": {
+    "reported_range_pct": [
+      28.9,
+      93.3
+    ],
+    "chip_average_reduction_pct": 62.2,
+    "ceiling_at_chip_average_signal_pct": 87.45291509622281
+  },
+  "entanglement": {
+    "S_coupled_6_steps": 2.0005370202713113,
+    "S_torn": 2.1117494092171136,
+    "S_own_coupling_stage": 2.1117494092171243,
+    "entropy_change_from_tearing_bits": 1.0658141036401503e-14,
+    "correlator_change_from_tearing": 0.18595166180695616
+  },
+  "residual_vs_simulation": {
+    "simulated": 0.026387207807985313,
+    "measured": 0.02085,
+    "noise_only": 0.008820600687355368,
+    "p_value_vs_zero": 0.00141
+  }
+}

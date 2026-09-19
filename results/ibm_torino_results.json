@@ -22,12 +22,39 @@
       "signal": "MARGINAL"
     },
     "spacetime_tearing": {
-      "q0_connected": 0.1538, "q0_torn": 0.0256, "q0_reduction_pct": 83.4,
-      "q1_connected": 0.1618, "q1_torn": 0.0087, "q1_reduction_pct": 94.6,
-      "q2_connected": 0.1265, "q2_torn": 0.0315, "q2_reduction_pct": 75.1,
-      "q3_connected": 0.0905, "q3_torn": 0.0176, "q3_reduction_pct": 80.5,
+      "q0_connected": 0.1538,
+      "q0_torn": 0.0256,
+      "q0_reduction_pct": 83.4,
+      "q1_connected": 0.1618,
+      "q1_torn": 0.0087,
+      "q1_reduction_pct": 94.6,
+      "q2_connected": 0.1265,
+      "q2_torn": 0.0315,
+      "q2_reduction_pct": 75.1,
+      "q3_connected": 0.0905,
+      "q3_torn": 0.0176,
+      "q3_reduction_pct": 80.5,
       "average_reduction_pct": 83.4,
-      "signal": "STRONG"
+      "signal": "STRONG",
+      "superseded": {
+        "date": "2026-09-19",
+        "by": "results/corrected_tearing.json",
+        "script": "src/analysis/13_tearing_validation.py",
+        "reason": "Two problems. Statistically, the reduction averages absolute correlations, which is biased upward, so the reduction is biased downward and is capped at 93.4% for this coupled signal even if the residual were exactly zero. Physically, the torn circuit evolves under intra-chain gates only after the coupling stops, which is a product of local unitaries and cannot change entanglement across the A:B cut. Simulation confirms the entropy is unchanged to 1e-14 bits while the correlator falls 88%.",
+        "reduction_pct_with_interval": {
+          "value": 84.3,
+          "ci_95": [
+            75.7,
+            90.9
+          ]
+        },
+        "ceiling_pct": 93.4,
+        "residual_is_real_non_zero": true,
+        "residual_p_value_vs_zero": 0.0014,
+        "residual_predicted_by_simulation": 0.0264,
+        "entanglement_change_from_tearing_bits": 1.07e-14,
+        "tests_van_raamsdonk_disconnection": false
+      }
     }
   },
   "cross_chain_correlations_z_basis": {
@@ -65,9 +92,21 @@
     }
   },
   "comparison_to_simulator": {
-    "coupling_ratio": {"simulator": "~40x (MI-based)", "hardware": "95.7x (Z-basis)"},
-    "cross_chain_C_coupled": {"simulator": 0.2393, "hardware": 0.1332},
-    "tearing_reduction_pct": {"simulator": 87.2, "hardware": 83.4},
-    "null_hypothesis_ratio": {"simulator": 10.3, "hardware": 1.63}
+    "coupling_ratio": {
+      "simulator": "~40x (MI-based)",
+      "hardware": "95.7x (Z-basis)"
+    },
+    "cross_chain_C_coupled": {
+      "simulator": 0.2393,
+      "hardware": 0.1332
+    },
+    "tearing_reduction_pct": {
+      "simulator": 87.2,
+      "hardware": 83.4
+    },
+    "null_hypothesis_ratio": {
+      "simulator": 10.3,
+      "hardware": 1.63
+    }
   }
 }

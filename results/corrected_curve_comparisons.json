@@ -1,0 +1,37 @@
+{
+  "shot_noise_sigma": 0.005524271728019902,
+  "universality": {
+    "r": 0.8901204372092857,
+    "r_ci": [
+      0.810707510516838,
+      0.9339513617818757
+    ],
+    "null_median_r": 0.6568453596420788,
+    "null_p95_r": 0.9434087752273578,
+    "fraction_of_unrelated_curves_reaching_r": 0.158,
+    "ising_peak_lambda": 0.75,
+    "heisenberg_peak_lambda": 1.5,
+    "chi2_per_dof": 8.996407680976596,
+    "best_scale": 1.2067669172932332,
+    "max_residual_sigma": 4.13831338378338,
+    "collapses": false
+  },
+  "gravity": {
+    "raw_r": 0.9986981360902878,
+    "r_with_measurements_replaced_by_constants": 1.0,
+    "raw_r_log_scale": 0.9712848192002322,
+    "partial_r_log_scale": 0.7818140368119969,
+    "partial_r_controlling_for_inv_lambda": 0.9681934322863226,
+    "r_ising_G_with_inv_lambda": 0.9824549695999268,
+    "r_xy_G_with_inv_lambda": 0.9870459733647398,
+    "jackknife_min_r": 0.984348441296742,
+    "jackknife_swing": 0.014349694793545753,
+    "trace_only_r": 0.6289878838613924,
+    "trace_only_r_ci": [
+      0.43088605698987514,
+      0.7664340537912067
+    ],
+    "trace_only_chi2_per_dof": 16.458851080061756
+  },
+  "control_acceptance_rate": 0.835
+}
