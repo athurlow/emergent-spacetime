@@ -53,6 +53,18 @@ Several headline claims from earlier versions have since been withdrawn after re
 
 **6. The universal gravitational coupling is withdrawn.** The effective constant G = 1/(4λη) was reported as agreeing between Ising and XY couplings at r = 0.9987. That correlation is definitional: both series carry the same imposed 1/λ factor, and replacing both measured inputs with constants, which measures nothing at all, scores r = 1.0000 on the same test. Correlating only the measured input gives r = 0.63 (95% CI 0.43 to 0.77), which unrelated curves match 47% of the time, with a scaling collapse failing at χ²/dof = 16.5.
 
+**7. Entanglement is now measured directly, and the torn state is still entangled.** Experiment 9 adds local randomized measurements, from which an entanglement witness is evaluated on a 2+2 reduced state. In simulation of the same circuits:
+
+| State | Cross-field \|C\| | Tr(Wρ) | Entangled? |
+|---|---|---|---|
+| Coupled | 0.239 | −0.084 [−0.107, −0.056] | certified |
+| Torn | 0.026 | −0.053 [−0.075, −0.030] | certified |
+| Decoupled | 0.000 | −0.007 [−0.028, +0.019] | not certified |
+
+The torn state's correlator has collapsed to a ninth of the coupled value, and it is still certified entangled. The decoupled state, which really is a product state, is correctly not certified. This is the measurement the first eight experiments were missing, and it settles the question result 2 could not.
+
+> This is simulation of the hardware protocol, not hardware data. The run script is ready but has not been executed against a device. It submits 2000 random measurement bases per state at 64 shots each, which is 6000 circuits in total. That basis count is not arbitrary: shots sharing a basis are correlated, so precision is governed by the number of distinct bases. At 600 bases the coupled state certifies in 4 trials out of 4 but the torn state only 3 out of 4; at 2000 both are reliable, and the separable control is never certified at either count. Two simpler certificates were tried and rejected first, both recorded in `src/analysis/14_entanglement_validation.py`: the p3-PPT moment condition, whose estimator variance grows exponentially with qubit count and which in any case cannot see this state's 2+2 cut, and a reconstructed negativity, which is biased upward and reads 0.065 on a separable control that should read zero. The witness is linear, so its estimator is unbiased and has no false-positive floor; each run prints a numerical check that it stays non-negative on random separable states.
+
 ## Hardware Experiments
 
 All runs used 8192 shots per circuit. The column reports the measured coupled cross-field correlation, which is a physical quantity, in place of the withdrawn ratio against the noise floor.
@@ -67,6 +79,7 @@ All runs used 8192 shots per circuit. The column reports the measured coupled cr
 | 6 | Universality (Ising vs Heisenberg) | IBM Torino | 8 | 0.160 / 0.118 | 85.7% / 82.8% |
 | 7 | Extended universality (XY, long-range) | IBM Torino | 8 | 0.088 (X-basis) | 12.1% |
 | 8 | Multi-basis measurement (Z, X, Y) | IBM Torino | 8 | 0.171 (Z-basis) | — |
+| 9 | Entanglement via randomized measurements | not yet run | 8 | — | — |
 
 The shot-noise scale on a single correlator at 8192 shots is 0.011, so the coupled signals above sit well clear of it. Per-run confidence intervals are not quoted because raw bitstring counts were not archived; see the reproducibility note below.
 
@@ -168,6 +181,7 @@ pip install qiskit qiskit-aer numpy pytest
 python src/analysis/11_baseline_and_metric_validation.py
 python src/analysis/12_universality_and_gravity_validation.py
 python src/analysis/13_tearing_validation.py
+python src/analysis/14_entanglement_validation.py
 python -m pytest tests/ -q
 ```
 
@@ -181,15 +195,19 @@ python -m pytest tests/ -q
 | `src/analysis/tearing_analysis.py` | Reduction with an interval, the ceiling the estimator imposes, and an upper bound on the residual correlation |
 | `src/analysis/12_universality_and_gravity_validation.py` | Runs the universality and emergent-gravity analyses end to end |
 | `src/analysis/13_tearing_validation.py` | Runs the tearing analysis, including the entanglement-invariance demonstration |
-| `tests/` | 45 tests, including several that document the defects being fixed |
+| `src/analysis/shadow_entanglement.py` | Classical-shadow estimators: subsystem purity, Renyi-2 entropy, partial-transpose moments, and the entanglement witness |
+| `src/experiments/09_entanglement_randomized_run.py` | Submits the randomized-measurement circuits to hardware |
+| `src/analysis/09_entanglement_randomized_retrieve.py` | Retrieves them, archives the raw per-shot records, and evaluates the witness |
+| `src/analysis/14_entanglement_validation.py` | Validates the protocol against exact values and records the rejected alternatives |
+| `tests/` | 70 tests, including several that document the defects being fixed, and one end-to-end run of the hardware analysis path |
 
 ### Known outstanding issues
 
 - The repository-structure tree above is stale: 17 of the 31 files it lists do not exist under those names, including the simulator named in the Quick Start. The simulator is at `src/simulation/qiskit_experiment.py`.
 - Experiment 3 (2×2 lattice) has a retrieve script but no run script and no archived results.
 - No error mitigation is applied on any hardware run.
-- The hardware pipeline measures single-basis ZZ correlators only. These cannot distinguish entanglement from classical correlation, so claims about entanglement specifically are not supported by the hardware data. The tearing analysis now demonstrates this concretely: the correlator can collapse while the entanglement is provably frozen. The tomography circuits built in experiment 3 are submitted but never analysed.
-- Testing disconnection properly needs an entanglement measure such as negativity or a witness, which requires measurements in more than one basis. None of the eight experiments does this.
+- Experiments 1 to 8 measure single-basis ZZ correlators only, which cannot distinguish entanglement from classical correlation. Experiment 9 adds a measurement that can, but it has not yet been run on hardware, so every entanglement number in this repository is still simulation. The tomography circuits built in experiment 3 are submitted but never analysed.
+- Subsystem entropy is reported by experiment 9 but is not a certificate on a noisy device: mixedness alone produces it. Only the witness value certifies entanglement.
 - The Ricci scalar analog and the eigenvalue-spectrum results have not been re-examined. The λ ≈ 0.31 inflection is a second derivative of an 8-point sweep and is unlikely to survive an uncertainty analysis.
 
 ## Theoretical Framework

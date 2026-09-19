@@ -29,6 +29,8 @@ __all__ = [
     "exact_correlation_matrix",
     "sample_counts",
     "load_hardware_counts",
+    "simulate_randomized_measurements",
+    "simulate_hardware_protocol",
 ]
 
 
@@ -156,3 +158,93 @@ def bipartite_entropy(qc: QuantumCircuit, n_per_chain: int) -> float:
     sv = Statevector.from_instruction(qc)
     reduced = partial_trace(sv, list(range(n_per_chain, qc.num_qubits)))
     return float(entropy(reduced))
+
+
+def simulate_randomized_measurements(qc: QuantumCircuit, n_shots: int,
+                                     seed: int | None = 0,
+                                     depolarizing: float = 0.0):
+    """Simulate the randomized-measurement protocol on a circuit.
+
+    One independent random Pauli basis per qubit per shot, then a
+    computational-basis measurement. Returns ``(bases, bits)`` integer
+    arrays of shape (n_shots, n_qubits) in qubit order, ready for
+    ``shadow_entanglement.snapshot_matrices``.
+
+    ``depolarizing`` applies a single-qubit depolarizing channel of that
+    strength to each qubit immediately before measurement. Since that
+    channel maps rho to (1-p) rho + p I/2, and every measurement here is of
+    a single-qubit Pauli, it is implemented exactly by replacing each
+    measured bit with a uniform random bit with probability p. Local
+    channels cannot create entanglement, so a separable state stays
+    separable under it, which is what makes it a fair noise control.
+    """
+    from shadow_entanglement import PAULI_ROTATIONS
+
+    n = qc.num_qubits
+    psi = Statevector.from_instruction(qc).data
+    rng = np.random.default_rng(seed)
+
+    bases = rng.integers(0, 3, size=(n_shots, n))
+    bits = np.empty((n_shots, n), dtype=int)
+
+    # Group shots by basis pattern so each rotation is built once.
+    keys, inverse = np.unique(bases, axis=0, return_inverse=True)
+    for k, pattern in enumerate(keys):
+        op = np.array([1.0 + 0j])
+        for q in range(n - 1, -1, -1):
+            op = np.kron(op, PAULI_ROTATIONS[int(pattern[q])])
+        probs = np.abs(op @ psi) ** 2
+        probs = np.maximum(probs, 0.0)
+        probs /= probs.sum()
+        rows = np.flatnonzero(inverse == k)
+        draws = rng.choice(len(probs), size=rows.size, p=probs)
+        for q in range(n):
+            bits[rows, q] = (draws >> q) & 1
+
+    if depolarizing > 0.0:
+        if not 0.0 <= depolarizing <= 1.0:
+            raise ValueError("depolarizing must lie in [0, 1]")
+        scrambled = rng.random((n_shots, n)) < depolarizing
+        bits = np.where(scrambled, rng.integers(0, 2, size=(n_shots, n)), bits)
+    return bases, bits
+
+
+def simulate_hardware_protocol(qc: QuantumCircuit, n_settings: int,
+                               shots_per_setting: int, seed: int | None = 0):
+    """Mirror how the hardware run actually collects data.
+
+    On a device one circuit carries one random basis and is repeated for
+    many shots, so those shots share their unitary. Precision is therefore
+    governed by the number of distinct bases, not by the total shot count.
+    Returns ``(bases, bits, setting_ids)``.
+    """
+    from shadow_entanglement import PAULI_ROTATIONS
+
+    n = qc.num_qubits
+    psi = Statevector.from_instruction(qc).data
+    rng = np.random.default_rng(seed)
+
+    chosen = rng.integers(0, 3, size=(n_settings, n))
+    bits = np.empty((n_settings * shots_per_setting, n), dtype=int)
+    for k in range(n_settings):
+        state = psi.reshape([2] * n)
+        for q in range(n):
+            b = int(chosen[k, q])
+            if b == 0:
+                continue
+            axis = n - 1 - q
+            state = np.moveaxis(
+                np.tensordot(PAULI_ROTATIONS[b], state, axes=([1], [axis])),
+                0, axis)
+        probs = np.abs(state.reshape(-1)) ** 2
+        probs = np.maximum(probs, 0.0)
+        probs /= probs.sum()
+        draws = rng.choice(len(probs), size=shots_per_setting, p=probs)
+        lo = k * shots_per_setting
+        hi = lo + shots_per_setting
+        for q in range(n):
+            bits[lo:hi, q] = (draws >> q) & 1
+
+    bases = np.repeat(chosen, shots_per_setting, axis=0)
+    setting_ids = np.repeat(np.arange(n_settings), shots_per_setting)
+    return bases, bits, setting_ids
